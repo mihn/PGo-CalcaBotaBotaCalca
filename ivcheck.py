@@ -8,8 +8,10 @@ import operator
 import unicodedata
 from sys import platform
 
+
 def in_func(a, b):
     return a in b
+
 
 ops = {
     'lt': operator.lt,
@@ -34,10 +36,10 @@ RE_RED_BAR = re.compile(r"^.+\(\s*\d+\): Screenshot #\d has red error box at the
 RE_SUCCESS = re.compile(r"^.+\(\s*\d+\): calculateScanOutputData finished after \d+ms$")
 RE_SCAN_INVALID = re.compile(r"^.+\(\s*\d+\): Scan invalid$")
 
-
 CALCY_SUCCESS = 0
 CALCY_RED_BAR = 1
 CALCY_SCAN_INVALID = 2
+
 
 class Main:
     def __init__(self, args):
@@ -71,7 +73,6 @@ class Main:
         while True:
             blacklist = False
             state, values = await self.check_pokemon()
-            await self.p.seek_to_end() # just in case any additional lines are present
 
             if "name" in values and values["name"] in self.config["blacklist"]:
                 blacklist = True
@@ -85,16 +86,15 @@ class Main:
                     continue
                 num_errors = 0
 
-            values["success"] = True if state == CALCY_SUCCESS and blacklist == False else False
+            values["success"] = True if state == CALCY_SUCCESS and blacklist is False else False
             values["blacklist"] = blacklist
             values["appraised"] = False
-
             actions = await self.get_actions(values)
             if "appraise" in actions:
                 await self.tap("pokemon_menu_button")
                 await self.tap("appraise_button")
-                await self.p.send_intent("tesmath.calcy.ACTION_ANALYZE_SCREEN", "tesmath.calcy/.IntentReceiver", [["silentMode", True], ["--user", self.args.user]])
-                for i in range(0, 3):
+                await self.p.send_intent("tesmath.calcy.ACTION_ANALYZE_SCREEN", "tesmath.calcy/.IntentReceiver", [["silentMode", True]])
+                for i in range(0, 4):  # we can do it four times before beggining to screencap
                     await self.tap("continue_appraisal")
                 while await self.check_appraising():
                     await self.tap("continue_appraisal")
@@ -105,14 +105,14 @@ class Main:
 
             if "rename" in actions or "rename-calcy" in actions or "rename-prefix" in actions:
                 if values["success"] is False:
-                    await self.tap('close_calcy_dialog') # it gets in the way
+                    await self.tap('close_calcy_dialog')  # it gets in the way
                 await self.tap('rename')
                 if "rename-calcy" in actions:
                     if args.touch_paste:
                         await self.swipe('edit_box', 600)
                         await self.tap('paste')
                     else:
-                        await self.p.key(279) # Paste into rename
+                        await self.p.key('KEYCODE_PASTE')  # Paste into rename
                 elif "rename" in actions:
                     await self.p.send_intent("clipper.set", extra_values=[["text", actions["rename"]]])
 
@@ -120,21 +120,10 @@ class Main:
                         await self.swipe('edit_box', 600)
                         await self.tap('paste')
                     else:
-                        await self.p.key(279)  # Paste into rename
-                elif "rename-prefix" in actions:
-                    if args.touch_paste:
-                        await self.swipe('edit_box', 600)
-                        await self.tap('paste')
-                    else:
-                        await self.p.key(279)  # Paste into rename
-
-                    await self.p.key('KEYCODE_MOVE_HOME')
-                    await self.p.send_intent("clipper.set", extra_values=[["text", actions["rename-prefix"]]])
-                    await self.p.key(279)  # Paste into beggining of string
-
-
-                await self.tap('keyboard_ok')
-                await self.tap('rename_ok')
+                        await self.p.key('KEYCODE_PASTE')  # Paste into rename
+                # await self.tap('keyboard_ok')  # Instead of yet another tap, use keyevents for reliability
+                await self.p.key('KEYCODE_TAB')
+                await self.p.key('KEYCODE_ENTER')
             if "favorite" in actions:
                 if not await self.check_favorite():
                     await self.tap('favorite_button')
@@ -165,7 +154,7 @@ class Main:
                     d["iv"] = None
                 return d
 
-        raise Exception("Clipboard regex did not match, got "+clipboard)
+        raise Exception("Clipboard regex did not match, got " + clipboard)
 
     async def check_appraising(self):
         """
@@ -232,7 +221,11 @@ class Main:
 
     async def get_actions(self, values):
         clipboard_values = None
-        valid_conditions = ["name", "iv", "iv_min", "iv_max", "success", "blacklist", "appraised"]
+        valid_conditions = [
+            "name", "iv", "iv_min", "iv_max", "success", "blacklist",
+            "appraised", "id", "cp", "max_hp", "dust_cost", "level",
+            "fast_move", "special_move", "gender"
+        ]
         clipboard_required = ["iv", "iv_min", "iv_max"]
         for ruleset in self.config["actions"]:
             conditions = ruleset.get("conditions", {})
@@ -245,6 +238,16 @@ class Main:
                 if key in clipboard_required and clipboard_values is None:
                     clipboard_values = await self.get_data_from_clipboard()
                     values = {**values, **clipboard_values}
+
+                if isinstance(values[key], str):
+                    if values[key].isnumeric():
+                        values[key] = int(values[key])
+                    else:
+                        try:
+                            values[key] = float(values[key])
+                        except ValueError:
+                            pass
+
                 if key not in valid_conditions:
                     raise Exception("Unknown Condition {}".format(key))
                 if key not in values:
@@ -276,8 +279,8 @@ class Main:
                 logger.debug("RE_CALCY_IV matched")
                 values = match.groupdict()
                 state = CALCY_SUCCESS
-                if "-1" in [values["cp"], values["level"]]:
-                    state = CALCY_SCAN_INVALID
+                if values['cp'] == '-1' or values['level'] == '-1.0':
+                    pass
                 elif red_bar is True:
                     state = CALCY_RED_BAR
                     return state, values
@@ -298,6 +301,7 @@ class Main:
                 else:
                     logger.debug("RE_SCAN_INVALID matched, raising CalcyIVError")
                     return CALCY_SCAN_INVALID, values
+
 
 if __name__ == '__main__':
     if platform == 'win32':
@@ -324,3 +328,4 @@ if __name__ == '__main__':
             asyncio.run(Main(args).start())
     else:
         asyncio.run(Main(args).start())
+
