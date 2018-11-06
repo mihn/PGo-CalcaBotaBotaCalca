@@ -37,66 +37,82 @@ actions:
           - Unown
       actions:
         rename: "‽Unown"
-    # - conditions:
-    #     iv:
-    #     iv_min__eq: 0
-    #     appraised: false
-    #   actions:
-    #     appraise:
-    # - conditions:
-    #     iv:
-    #     iv_max__ge: 90
-    #     appraised: false
-    #   actions:
-    #     appraise:
-    # Trash but Rare
+    - conditions:
+        iv:
+        iv_min__eq: 0
+        appraised: false
+      actions:
+        # rename-calcy:
+        appraise:
+    - conditions:
+        iv:
+        iv_max__eq: 100
+        appraised: false
+      actions:
+        # rename-calcy:
+        appraise:
+    # Legendary/ExRaid/Mythical/Good
+    - conditions:
+        name__in:
+          - Mewtwo
+          - Deoxys
+          - Giratina Altered
+          - Celebi
+          - Articuno
+          - Zapdos
+          - Moltres
+          - Raikou
+          - Gengar
+          - Entei
+          - Suicune
+          - Ho-oh
+          - Lugia
+          - Regirock
+          - Regice
+          - Registeel
+          - Latias
+          - Latios
+          - Kyogre
+          - Groudon
+          - Rayquaza
+          - Absol
+      actions:
+        rename-calcy:
+    - conditions:
+        iv_max__ge: 60
+        cp__ge: 2200
+      actions:
+        rename-calcy:
+    # For Trade Candy
     - conditions:
         name__in:
           - Larvitar
           - Pupitar
-          - Tyranitar
           - Bagon
-          - Dragonite
+          - Shelgon
           - Beldum
-          - Dratini
+          - Metang
           - Ralts
-          - Machamp
-          - Machoke
           - Machop
+          - Pineco
+      actions:
+        rename: "•TRADE"
+    # For trade with others
+    - conditions:
+        name__in:
+          - Tyranitar
+          - Dratini
+          - Dragonite
           - Snorlax
-        iv_max__le: 90
       actions:
         rename-prefix: "•"
-    # Legendary/ExRaid/Mythical/Good
-    # - conditions:
-    #     name__in:
-    #       - Mewtwo
-    #       - Deoxys
-    #       - Giratina Altered
-    #       - Celebi
-    #       - Articuno
-    #       - Zapdos
-    #       - Moltres
-    #       - Raikou
-    #       - Gengar
-    #       - Entei
-    #       - Suicune
-    #       - Ho-oh
-    #       - Lugia
-    #       - Regirock
-    #       - Regice
-    #       - Registeel
-    #       - Latias
-    #       - Latios
-    #       - Kyogre
-    #       - Groudon
-    #       - Rayquaza
-    #       - Absol
-    #   actions:
-    #     rename-calcy:
-    # - conditions:
-    #     iv_max__le: 90
-    #     cp__le: 1800
+    - conditions:
+        iv_max__ge: 90
+        cp__ge: 2000
+      actions:
+        rename-calcy:
+    - conditions:
+        iv_max__lt: 90
     - actions:
         rename-calcy: # Rename normally
 
