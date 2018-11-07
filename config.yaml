@@ -55,7 +55,7 @@ actions:
     - conditions:
         name__in:
           - Mewtwo
-          - Deoxys
+          - Deoxys Normal
           - Giratina Altered
           - Celebi
           - Articuno
@@ -96,7 +96,7 @@ actions:
           - Machop
           - Pineco
       actions:
-        rename: "•TRADE"
+        rename: "• TRADE"
     # For trade with others
     - conditions:
         name__in:
