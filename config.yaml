@@ -11,7 +11,7 @@ locations:
     pokemon_menu_button: [940, 1700]
     appraise_button: [940, 1315]
     continue_appraisal: [540, 1100]
-    calcy_appraisal_save_button: [880, 920]
+    calcy_appraisal_save_button: [880, 800]
     dismiss_calcy: [540, 1170]
     appraisal_box: [45, 1594, 1032, 1792]
 
@@ -31,12 +31,12 @@ actions:
     - conditions:
         success: false
       actions:
-        rename: "!FAILED"
+        rename: "!ScanFail"
     - conditions:
         name__in:
           - Unown
       actions:
-        rename: "‽Unown"
+        rename: "‽ Unown"
     - conditions:
         iv:
         iv_min__eq: 0
