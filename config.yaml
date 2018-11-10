@@ -16,42 +16,28 @@ locations:
     appraisal_box: [45, 1594, 1032, 1792]
 
 waits:
-    next: 0.7
-    rename: 1
-    rename_ok: 1.5
+    next: 0.5
+    rename: 0.7
+    rename_ok: 1.4
     pokemon_menu_button: 0.6
     appraise_button: 1
-    calcy_appraisal_save_button: 8 #4
-    continue_appraisal: 0.05
+    calcy_appraisal_save_button: 5 #4
+    continue_appraisal: 0.03
 
 blacklist:
     -
-
 actions:
+    # Failed scans get renamed for later verification
     - conditions:
         success: false
       actions:
-        rename: "!ScanFail"
+        rename: "! Failed"
     - conditions:
         name__in:
           - Unown
       actions:
-        rename: "‽ Unown"
-    - conditions:
-        iv:
-        iv_min__eq: 0
-        appraised: false
-      actions:
-        # rename-calcy:
-        appraise:
-    - conditions:
-        iv:
-        iv_max__eq: 100
-        appraised: false
-      actions:
-        # rename-calcy:
-        appraise:
-    # Legendary/ExRaid/Mythical/Good
+        rename-prefix: "‽ "
+    # Legendary/ExRaid/Mythical/Good get renamed with custom prefix
     - conditions:
         name__in:
           - Mewtwo
@@ -65,7 +51,7 @@ actions:
           - Gengar
           - Entei
           - Suicune
-          - Ho-oh
+          - Ho-Oh
           - Lugia
           - Regirock
           - Regice
@@ -77,13 +63,57 @@ actions:
           - Rayquaza
           - Absol
       actions:
-        rename-calcy:
+        rename-prefix: "⁺"
+    # Renames hundos before everything else
     - conditions:
-        iv_max__ge: 60
-        cp__ge: 2200
+        iv__eq: 100
       actions:
         rename-calcy:
-    # For Trade Candy
+    # Potential IV0 or IV100 get either appraised, or just renamed for later verification
+    - conditions:
+        iv:
+        iv_min__eq: 0
+        appraised: false
+      actions:
+        appraise:
+        # rename: "! Verify"
+    - conditions:
+        iv:
+        iv_max__eq: 100
+        appraised: false
+      actions:
+        appraise:
+        # rename: "! Verify"
+    # For trading as well, but keeps stats visible because they may come useful in a pinch
+    - conditions:
+        name__in:
+          - Tyranitar
+          - Dragonite
+          - Snorlax
+          - Machamp
+          - Blissey
+          - Shinx
+          - Salamence
+          - Chansey
+      actions:
+        rename-prefix: "★ "
+    # Renames luckyegg evo pokemons (except hundos)
+    - conditions:
+        name__in:
+          - Pidgey
+          - Weedle
+          - Whishmur
+          - Wurmple
+          - Caterpie
+      actions:
+        rename-prefix: "‰ "
+    # Renames everything between (max) IV95 and 100 with a prefix,
+    # for easily transfering shitty IV95-100 common pokemons afterwards
+    - conditions:
+        iv_max__ge: 95
+      actions:
+        rename-prefix: "∞ "
+    # For Trading for candy like whatever
     - conditions:
         name__in:
           - Larvitar
@@ -94,28 +124,60 @@ actions:
           - Metang
           - Ralts
           - Machop
+          - Machoke
           - Pineco
-      actions:
-        rename: "• TRADE"
-    # For trade with others
-    - conditions:
-        name__in:
-          - Tyranitar
+          - Lickitung
+          - Slakoth
           - Dratini
-          - Dragonite
-          - Snorlax
       actions:
-        rename-prefix: "•"
+        rename-prefix: "• "
+    # Skips everything else below IV95
     - conditions:
-        iv_max__ge: 90
-        cp__ge: 2000
-      actions:
-        rename-calcy:
-    - conditions:
-        iv_max__lt: 90
+        iv_max__lt: 95
+    # Renames anything else that doesn't matches any rule above
+    #  which, in theory, shouldn't happen, so it adds a prefix to fix the rules
     - actions:
-        rename-calcy: # Rename normally
+        rename-prefix: "¿ "
+
+    # Not used anymore
+    # # Renames
+    # - conditions:
+    #     iv_max__ge: 85
+    #     cp__ge: 2000
+    #   actions:
+    #     rename-prefix:
 
 iv_regexes:
     - ^.+     (?P<iv>\d+)$
     - ^.+     (?P<iv_min>\d+)\-(?P<iv_max>\d+)$
+
+
+
+# `¡`
+# `¿`
+# `“`
+# `›`
+# `+`
+
+# `⁺`
+# `»`
+# `÷`
+# `×`
+# `∅`
+# `≈`
+# `↑`
+# `→`
+# `↓`
+# `←`
+# `·`
+# `†`
+# `‡`
+# `•`
+# `★`
+# `♠`
+# `♦`
+# `♣`
+# `♥`
+# `✓`
+# `‰`
+# `∞`
