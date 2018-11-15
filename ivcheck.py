@@ -7,6 +7,7 @@ import logging
 import operator
 import unicodedata
 from sys import platform
+from colorlog import ColoredFormatter
 
 
 def in_func(a, b):
@@ -27,7 +28,7 @@ logger = logging.getLogger('ivcheck')
 logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = ColoredFormatter("  %(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s")
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
@@ -52,6 +53,7 @@ class Main:
     async def tap(self, location):
         await self.p.tap(*self.config['locations'][location])
         if location in self.config['waits']:
+            logger.info('Waiting ' + str(self.config['waits'][location]) + ' seconds after ' + str(self.config['waits']) + '...')
             await asyncio.sleep(self.config['waits'][location])
 
     async def swipe(self, location, duration):
@@ -63,6 +65,7 @@ class Main:
             duration
         )
         if location in self.config['waits']:
+            logger.info('Waiting ' + str(self.config['waits'][location]) + ' seconds after ' + str(self.config['waits']) + '...')
             await asyncio.sleep(self.config['waits'][location])
 
     async def start(self):
@@ -285,7 +288,8 @@ class Main:
         values = {}
         while True:
             line = await self.p.read_logcat()
-            logger.debug("logcat line received: %s", line)
+            if args.verbose:
+                logger.debug("logcat line received: %s", line)
             match = RE_CALCY_IV.match(line)
             if match:
                 logger.debug("RE_CALCY_IV matched")
@@ -333,6 +337,8 @@ if __name__ == '__main__':
                         help="Create pid file")
     parser.add_argument('--pid-dir', default=None, type=str,
                         help="Change default pid directory")
+    parser.add_argument('--verbose', '-v', default=False, action='store_true',
+                        help="Enables dumping of the device's logcat. Spams quite a lot.")
     args = parser.parse_args()
     if args.pid_name is not None:
         from pid import PidFile

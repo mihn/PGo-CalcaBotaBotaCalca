@@ -4,12 +4,14 @@ import asyncio
 import logging
 import subprocess
 import re
+from colorlog import ColoredFormatter
+
 
 logger = logging.getLogger('PokemonGo')
 logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = ColoredFormatter("  %(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s")
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
