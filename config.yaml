@@ -27,16 +27,30 @@ waits:
 blacklist:
     -
 actions:
+    # - conditions:
+    #     success: true
+    # - conditions:
+    #     success: false
     # Failed scans get renamed for later verification
     - conditions:
         success: false
       actions:
         rename: "! Failed"
+
+    # Renames Unowns with prefix
     - conditions:
         name__in:
           - Unown
       actions:
         rename-prefix: "‽ "
+
+    # Renames Spindas with prefix
+    - conditions:
+        name__in:
+          - Spinda
+      actions:
+        rename-prefix: "+ "
+
     # Legendary/ExRaid/Mythical/Good get renamed with custom prefix
     - conditions:
         name__in:
@@ -62,28 +76,34 @@ actions:
           - Groudon
           - Rayquaza
           - Absol
+          - Shedinja
       actions:
-        rename-prefix: "⁺"
+        rename-prefix: "»"
+
     # Renames hundos before everything else
     - conditions:
         iv__eq: 100
       actions:
         rename-calcy:
-    # Potential IV0 or IV100 get either appraised, or just renamed for later verification
-    - conditions:
-        iv:
-        iv_min__eq: 0
-        appraised: false
-      actions:
-        appraise:
-        # rename: "! Verify"
+
+    # # Potential IV0 get appraised or renamed for later verification
+    # - conditions:
+    #     iv:
+    #     iv_min__eq: 0
+    #     appraised: false
+    #   actions:
+    #     appraise:
+    #     rename: "! Verify"
+
+    # Potential IV100 get appraised or renamed for later verification
     - conditions:
         iv:
         iv_max__eq: 100
         appraised: false
       actions:
-        appraise:
-        # rename: "! Verify"
+        # appraise:
+        rename: "! Verify"
+
     # For trading as well, but keeps stats visible because they may come useful in a pinch
     - conditions:
         name__in:
@@ -95,8 +115,14 @@ actions:
           - Shinx
           - Salamence
           - Chansey
+          - Golem Normal
+          - Flareon
+          - Vaporeon
+          - Exeggutor
+          - Exeggutor Alolan
       actions:
         rename-prefix: "★ "
+
     # Renames luckyegg evo pokemons (except hundos)
     - conditions:
         name__in:
@@ -107,6 +133,7 @@ actions:
           - Caterpie
       actions:
         rename-prefix: "‰ "
+
     # Renames everything between (max) IV95 and 100 with a prefix,
     # for easily transfering shitty IV95-100 common pokemons afterwards
     - conditions:
@@ -134,18 +161,13 @@ actions:
     # Skips everything else below IV95
     - conditions:
         iv_max__lt: 95
+
+
     # Renames anything else that doesn't matches any rule above
     #  which, in theory, shouldn't happen, so it adds a prefix to fix the rules
     - actions:
         rename-prefix: "¿ "
 
-    # Not used anymore
-    # # Renames
-    # - conditions:
-    #     iv_max__ge: 85
-    #     cp__ge: 2000
-    #   actions:
-    #     rename-prefix:
 
 iv_regexes:
     - ^.+     (?P<iv>\d+)$
@@ -153,31 +175,33 @@ iv_regexes:
 
 
 
-# `¡`
-# `¿`
-# `“`
-# `›`
-# `+`
-
-# `⁺`
-# `»`
-# `÷`
-# `×`
-# `∅`
-# `≈`
-# `↑`
-# `→`
-# `↓`
-# `←`
-# `·`
-# `†`
-# `‡`
-# `•`
-# `★`
-# `♠`
-# `♦`
-# `♣`
-# `♥`
-# `✓`
-# `‰`
-# `∞`
+# !
+# @
+# ¡
+# ¿
+# “
+# ›
+# ‽
+# +
+# ⁺
+# »
+# ÷
+# ×
+# ∅
+# ≈
+# ↑
+# →
+# ↓
+# ←
+# ·
+# †
+# ‡
+# •
+# ★
+# ♠
+# ♦
+# ♣
+# ♥
+# ✓
+# ‰
+# ∞
