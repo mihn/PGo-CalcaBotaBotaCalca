@@ -63,7 +63,7 @@ actions:
 Rename bad IV Abra, Gastly and Machop to ".TRADE" so you can trade them later.
 ```
     - conditions:
-        name__in: 
+        name__in:
           - Abra
           - Gastly
           - Machop
@@ -121,7 +121,7 @@ An example of the actions I currently use. I haven't finished fleshing it out ye
       actions:
         rename: ".TRADE"
     - conditions:
-        name__in: 
+        name__in:
           - Mewtwo
           - Raichu Alolan
           - Spinda

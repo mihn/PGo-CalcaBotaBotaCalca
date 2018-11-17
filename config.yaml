@@ -26,11 +26,14 @@ waits:
 
 blacklist:
     -
+
 actions:
+    # Uncomment this and comment everything else to NOT rename any pokemon, just scan for adding to history
     # - conditions:
     #     success: true
     # - conditions:
     #     success: false
+
     # Failed scans get renamed for later verification
     - conditions:
         success: false
@@ -140,6 +143,7 @@ actions:
         iv_max__ge: 95
       actions:
         rename-prefix: "∞ "
+
     # For Trading for candy like whatever
     - conditions:
         name__in:
@@ -158,6 +162,7 @@ actions:
           - Dratini
       actions:
         rename-prefix: "• "
+
     # Skips everything else below IV95
     - conditions:
         iv_max__lt: 95
@@ -175,33 +180,46 @@ iv_regexes:
 
 
 
-# !
-# @
-# ¡
-# ¿
-# “
-# ›
-# ‽
-# +
-# ⁺
-# »
-# ÷
-# ×
-# ∅
-# ≈
-# ↑
-# →
-# ↓
-# ←
-# ·
-# †
-# ‡
-# •
-# ★
-# ♠
-# ♦
-# ♣
-# ♥
-# ✓
-# ‰
-# ∞
+###################
+## Sorting Table ##
+###################
+
+## Order in which Pokemon displays pokémons when sorting by A-Z
+# - `꩜ ` (the special @, does not exist on Gboard)
+# - `$`
+# - `%`
+# - `&`
+# - `*`
+# - `@`
+# - `,`
+# - `.`
+# - `?`
+# - `_`
+# - `¡` (alongside `!`)
+# - `¿` (alongside `?`)
+# - `“` (alongside `"`)
+# - `›` (alongside `'`)
+# - `‽` (alongside `?`)
+# - `+`
+# - `⁺` (superscript plus, does not exist on Gboard)
+# - `»` (alongside `"`)
+# - `÷`
+# - `×`
+# - `∅` (alingside `0`)
+# - `≈` (alongside `=`)
+# - `↑` (alingside `^`)
+# - `→` (alingside `^`)
+# - `↓` (alingside `^`)
+# - `←` (alingside `^`)
+# - `·` (alongside `-`)
+# - `†` (alongside `*`)
+# - `‡` (alongside `*`)
+# - `•`
+# - `★` (alongside `*`)
+# - `♠` (alongside `•`)
+# - `♦` (alongside `•`)
+# - `♣` (alongside `•`)
+# - `♥` (alongside `•`)
+# - `✓`
+# - `‰`
+# - `∞` (alongside `=`)
