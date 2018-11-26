@@ -53,7 +53,7 @@ class Main:
     async def tap(self, location):
         await self.p.tap(*self.config['locations'][location])
         if location in self.config['waits']:
-            logger.info('Waiting ' + str(self.config['waits'][location]) + ' seconds after ' + str(self.config['waits']) + '...')
+            logger.info('Waiting ' + str(self.config['waits'][location]) + ' seconds after ' + str(self.config['locations'][location]) + '...')
             await asyncio.sleep(self.config['waits'][location])
 
     async def swipe(self, location, duration):
@@ -65,7 +65,7 @@ class Main:
             duration
         )
         if location in self.config['waits']:
-            logger.info('Waiting ' + str(self.config['waits'][location]) + ' seconds after ' + str(self.config['waits']) + '...')
+            logger.info('Waiting ' + str(self.config['waits'][location]) + ' seconds after ' + str(self.config['locations'][location]) + '...')
             await asyncio.sleep(self.config['waits'][location])
 
     async def start(self):
@@ -128,9 +128,17 @@ class Main:
                     if args.touch_paste:
                         await self.swipe('edit_box', 600)
                         await self.tap('paste')
-                    await self.p.key('KEYCODE_MOVE_HOME')
-                    await self.p.text(actions["rename-prefix"])
+                    else:
+                        await self.p.key('KEYCODE_PASTE')  # Paste into rename
 
+                    await self.p.key('KEYCODE_MOVE_HOME')
+                    await self.p.send_intent("clipper.set", extra_values=[["text", actions["rename-prefix"]]])
+
+                    if args.touch_paste:
+                        await self.swipe('edit_box', 600)
+                        await self.tap('paste')
+                    else:
+                        await self.p.key('KEYCODE_PASTE')  # Paste into rename
 
                 # await self.tap('keyboard_ok')  # Instead of yet another tap, use keyevents for reliability
                 await self.p.key('KEYCODE_TAB')
