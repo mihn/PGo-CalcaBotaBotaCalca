@@ -128,12 +128,9 @@ class Main:
                     if args.touch_paste:
                         await self.swipe('edit_box', 600)
                         await self.tap('paste')
-                    else:
-                        await self.p.key(279)  # Paste into rename
-
                     await self.p.key('KEYCODE_MOVE_HOME')
-                    await self.p.send_intent("clipper.set", extra_values=[["text", actions["rename-prefix"]]])
-                    await self.p.key('KEYCODE_PASTE')  # Paste into rename
+                    await self.p.text(actions["rename-prefix"])
+
 
                 # await self.tap('keyboard_ok')  # Instead of yet another tap, use keyevents for reliability
                 await self.p.key('KEYCODE_TAB')
