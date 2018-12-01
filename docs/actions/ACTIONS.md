@@ -48,7 +48,7 @@ _For Gboard users, the character in parenthesis indicates which key on Gboard co
 - `·` _(Inside key `-`)_
 - `†` _(Inside key `*`)_
 - `‡` _(Inside key `*`)_
-- `•`410
+- `•`_
 - `★` _(Inside key `*`)_
 - `♠` _(Inside key `•`)_
 - `♣` _(Inside key `•`)_
