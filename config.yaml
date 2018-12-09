@@ -19,7 +19,7 @@ locations:
 waits:
     next: 0.8
     rename: 0.5
-    rename_ok: 3
+    rename_ok: 1.5
     pokemon_menu_button: 0.6
     appraise_button: 1
     calcy_appraisal_save_button: 3
@@ -39,162 +39,17 @@ blacklist:
     -
 
 actions:
-    # Uncomment this and comment everything else to NOT rename any pokemon, just scan for adding to history
-    # - conditions:
-    #     success: true
-    # - conditions:
-    #     success: false
-
     # Failed scans get renamed for later verification
     - conditions:
         success: false
       actions:
-        rename: "! Failed"
+        reset-name:
+        add-prefix: "!"
 
-    # Renames Unowns with prefix
-    - conditions:
-        name__in:
-          - Unown
-      actions:
-        rename-prefix: "♣ "
-
-    # Renames babies
-    - conditions:
-        name__in:
-          - Pichu
-          - Togepi
-          - Igglybuff
-          - Cleffa
-          - Elekid
-          - Smoochum
-          - Magby
-          - Budew
-          - Wynaut
-          - Tyrogue
-      actions:
-        rename-prefix: "♥ "
-
-    # Renames Myth/Quest/Rare/Exclusive/Cool
-    - conditions:
-        name__in:
-          - Riolu
-          - Spiritomb
-          - Spinda
-          - Shedinja
-          - Shinx
-          - Celebi
-          - Mew
-      actions:
-        rename-prefix: "♦ "
-
-    # Legendary/ExRaid/Mythical get renamed with custom prefix
-    - conditions:
-        name__in:
-          - Mewtwo
-          - Deoxys Normal
-          - Giratina Altered
-          - Articuno
-          - Zapdos
-          - Moltres
-          - Raikou
-          - Gengar
-          - Entei
-          - Suicune
-          - Ho-Oh
-          - Lugia
-          - Regirock
-          - Regice
-          - Registeel
-          - Latias
-          - Latios
-          - Kyogre
-          - Groudon
-          - Rayquaza
-          - Absol
-          - Cresselia
-          - Marowak Alolan
-      actions:
-        rename-prefix: "·"
-
-    # Renames hundos before everything else
-    - conditions:
-        iv__eq: 100
-      actions:
-        rename-calcy:
-
-    # Potential IV100 get appraised or renamed for later verification
-    - conditions:
-        iv:
-        iv_max__eq: 100
-        appraised: false
-      actions:
-        appraise:
-        # rename: "! Verify"
-
-    # Renames luckyegg evo pokemons (except hundos)
-    # - conditions:
-    #     name__in:
-    #       - Pidgey
-    #       - Weedle
-    #       - Whishmur
-    #       - Wurmple
-    #       - Caterpie
-    #   actions:
-    #     rename-prefix: "‰ "
-
-    # Renames everything between (max) IV95 and 100 with a prefix,
-    # for easily transfering shitty IV95-100 common pokemons afterwards
-    - conditions:
-        iv_max__ge: 95
-      actions:
-        rename-prefix: "∞ "
-
-    # For trading (high cp + low IV)
-    - conditions:
-        cp__ge: 1600
-        iv_max__lt: 95
-      actions:
-        rename-prefix: "‰ "
-
-    # For trading (for candy)
-    - conditions:
-        name__in:
-          - Tyranitar
-          - Dragonite
-          - Snorlax
-          - Machamp
-          - Blissey
-          - Salamence
-          - Chansey
-          - Larvitar
-          - Pupitar
-          - Bagon
-          - Shelgon
-          - Beldum
-          - Metang
-          - Ralts
-          - Machop
-          - Machoke
-          - Pineco
-          - Shinx
-          - Lickitung
-          - Slakoth
-          - Dratini
-          - Feebas
-          - Mawile
-          - Porygon
-      actions:
-        rename-prefix: "‰ "
-
-    # Skips everything else below IV95
-    - conditions:
-        iv_max__lt: 95
-
-    # Renames anything else that doesn't matches any rule above
-    #  which, in theory, shouldn't happen, so it adds a prefix to fix the rules
+    # Successful scans get renamed via Calcy
     - actions:
-        rename-prefix: "¿ "
-
+        reset-name:
+        add-prefix: "★ "
 
 
 iv_regexes:
