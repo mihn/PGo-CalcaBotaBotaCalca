@@ -173,7 +173,11 @@ class Main:
                     d["iv"] = None
                 return clipboard, d
 
-        raise Exception("Clipboard regex did not match, got " + clipboard)
+        if args.regexp-skip is True:
+            logger.warning('It seems that clicking OK took too long or your interent connection is unstable. I\'ll wait a while and try to continue.')
+            asyncio.sleep(5)
+        else:
+            raise RegexDidNotMatch()
 
     async def check_appraising(self):
         """
@@ -291,8 +295,9 @@ class Main:
                 logger.debug("logcat line received: %s", line)
             match = RE_CALCY_IV.match(line)
             if match:
-                logger.debug("RE_CALCY_IV matched")
+                logger.warning("RE_CALCY_IV matched: " + line)
                 values = match.groupdict()
+                logger.error(values)
                 state = CALCY_SUCCESS
                 if values['cp'] == '-1' or values['level'] == '-1.0':
                     pass
@@ -341,6 +346,8 @@ if __name__ == '__main__':
                         help="Change default pid directory")
     parser.add_argument('--verbose', '-v', default=False, action='store_true',
                         help="Enables dumping of the device's logcat. Spams quite a lot.")
+    # parser.add_argument('--regexp-skip', '-e', default=False, action='store_true',
+    #                     help="Does not fails when matching regexps, to deal with intermittent issues on your internet connection (use with care).")
     args = parser.parse_args()
     if args.pid_name is not None:
         from pid import PidFile
