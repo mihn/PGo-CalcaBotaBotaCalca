@@ -5,7 +5,11 @@ import re
 import argparse
 import logging
 import operator
+<<<<<<< HEAD
 import unicodedata
+=======
+import os.path
+>>>>>>> 551fb2bb7e6aad00e20298e9bc6dd2324d67c9c6
 from sys import platform
 from colorlog import ColoredFormatter
 
@@ -41,11 +45,28 @@ CALCY_SUCCESS = 0
 CALCY_RED_BAR = 1
 CALCY_SCAN_INVALID = 2
 
+class Loader(yaml.SafeLoader):
+
+    def __init__(self, stream):
+
+        self._root = os.path.split(stream.name)[0]
+
+        super(Loader, self).__init__(stream)
+
+    def include(self, node):
+
+        filename = os.path.join(self._root, self.construct_scalar(node))
+
+        with open(filename, 'r') as f:
+            return yaml.load(f, Loader)
+
+Loader.add_constructor('!include', Loader.include)
+
 
 class Main:
     def __init__(self, args):
         with open(args.config, "r") as f:
-            self.config = yaml.load(f)
+            self.config = yaml.load(f, Loader)
         self.args = args
         self.use_fallback_screenshots = False
         self.iv_regexes = [re.compile(r) for r in self.config["iv_regexes"]]
@@ -110,36 +131,14 @@ class Main:
                 if values["success"] is False:
                     await self.tap('close_calcy_dialog')  # it gets in the way
                 await self.tap('rename')
-                if "rename-calcy" in actions:
-                    if args.touch_paste:
-                        await self.swipe('edit_box', 600)
-                        await self.tap('paste')
-                    else:
-                        await self.p.key('KEYCODE_PASTE')  # Paste into rename
-                elif "rename" in actions:
-                    await self.p.send_intent("clipper.set", extra_values=[["text", actions["rename"]]])
+                if actions.get("rename", "{calcy}") != "{calcy}": # Don't bother setting clipboard if we don't need to change it
+                    await self.p.send_intent("clipper.set", extra_values=[["text", actions["rename"].format(**values)]])
 
-                    if args.touch_paste:
-                        await self.swipe('edit_box', 600)
-                        await self.tap('paste')
-                    else:
-                        await self.p.key('KEYCODE_PASTE')  # Paste into rename
-                elif "rename-prefix" in actions:
-                    if args.touch_paste:
-                        await self.swipe('edit_box', 600)
-                        await self.tap('paste')
-                    else:
-                        await self.p.key('KEYCODE_PASTE')  # Paste into rename
-
-                    await self.p.key('KEYCODE_MOVE_HOME')
-                    await self.p.send_intent("clipper.set", extra_values=[["text", actions["rename-prefix"]]])
-
-                    if args.touch_paste:
-                        await self.swipe('edit_box', 600)
-                        await self.tap('paste')
-                    else:
-                        await self.p.key('KEYCODE_PASTE')  # Paste into rename
-
+                if args.touch_paste:
+                    await self.swipe('edit_box', 600)
+                    await self.tap('paste')
+                else:
+                    await self.p.key('KEYCODE_PASTE')  # Paste into rename
                 # await self.tap('keyboard_ok')  # Instead of yet another tap, use keyevents for reliability
                 await self.p.key('KEYCODE_TAB')
                 await self.p.key('KEYCODE_ENTER')
@@ -172,7 +171,7 @@ class Main:
                         if key in d:
                             d[key] = float(d[key])
                     d["iv"] = None
-                return d
+                return clipboard, d
 
         raise Exception("Clipboard regex did not match, got " + clipboard)
 
@@ -240,13 +239,11 @@ class Main:
         return color_count > 500
 
     async def get_actions(self, values):
-        clipboard_values = None
         valid_conditions = [
             "name", "iv", "iv_min", "iv_max", "success", "blacklist",
             "appraised", "id", "cp", "max_hp", "dust_cost", "level",
             "fast_move", "special_move", "gender", "catch_year"
         ]
-        clipboard_required = ["iv", "iv_min", "iv_max"]
         for ruleset in self.config["actions"]:
             conditions = ruleset.get("conditions", {})
             # Check if we need to read the clipboard
@@ -255,9 +252,6 @@ class Main:
                 operator = None
                 if "__" in key:
                     key, operator = key.split("__")
-                if key in clipboard_required and clipboard_values is None:
-                    clipboard_values = await self.get_data_from_clipboard()
-                    values = {**values, **clipboard_values}
 
                 if isinstance(values[key], str):
                     if values[key].isnumeric():
@@ -306,6 +300,9 @@ class Main:
                     state = CALCY_RED_BAR
                     return state, values
                 else:
+                    clipboard, clipboard_values = await self.get_data_from_clipboard()
+                    values = {**values, **clipboard_values}
+                    values["calcy"] = clipboard
                     return state, values
 
             match = RE_RED_BAR.match(line)
