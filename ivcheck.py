@@ -279,7 +279,7 @@ class Main:
                     passed = False
                     break
             if passed:
-                logger.warn('Condition matched against ' + str(ruleset.get("conditions", {})))
+                logger.warning('Condition matched against ' + str(ruleset.get("conditions", {})))
                 return ruleset.get("actions", {})
         raise Exception("No action matched")
 
@@ -294,7 +294,7 @@ class Main:
             match = RE_CALCY_IV.match(line)
             if match:
                 values = match.groupdict()
-                logger.warn(values)
+                logger.warning(values)
                 state = CALCY_SUCCESS
                 if values['cp'] == '-1' or values['level'] == '-1.0':
                     pass
