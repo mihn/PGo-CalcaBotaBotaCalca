@@ -39,6 +39,12 @@ blacklist:
     -
 
 actions:
+    # Uncomment this and comment everything else to NOT rename any pokemon, just scan for adding to history
+    # - conditions:
+    #     success: true
+    # - conditions:
+    #     success: false
+
     # Failed scans get renamed for later verification
     - conditions:
         success: false
@@ -65,7 +71,6 @@ actions:
           - Budew
           - Wynaut
           - Tyrogue
-          - Azurill
       actions:
         rename-prefix: "♥ "
 
@@ -108,12 +113,13 @@ actions:
           - Absol
           - Cresselia
           - Marowak Alolan
+          - Heltran
       actions:
         rename-prefix: "·"
 
     # Renames hundos before everything else
     - conditions:
-        iv: 100
+        iv__eq: 100
       actions:
         rename-calcy:
 
@@ -190,6 +196,7 @@ actions:
     #  which, in theory, shouldn't happen, so it adds a prefix to fix the rules
     - actions:
         rename-prefix: "¿ "
+
 
 
 iv_regexes:
