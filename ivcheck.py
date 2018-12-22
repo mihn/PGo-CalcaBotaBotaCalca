@@ -5,11 +5,8 @@ import re
 import argparse
 import logging
 import operator
-<<<<<<< HEAD
 import unicodedata
-=======
 import os.path
->>>>>>> 551fb2bb7e6aad00e20298e9bc6dd2324d67c9c6
 from sys import platform
 from colorlog import ColoredFormatter
 
@@ -282,6 +279,7 @@ class Main:
                     passed = False
                     break
             if passed:
+                logger.warn('Condition matched against ' + str(ruleset.get("conditions", {})))
                 return ruleset.get("actions", {})
         raise Exception("No action matched")
 
@@ -295,9 +293,8 @@ class Main:
                 logger.debug("logcat line received: %s", line)
             match = RE_CALCY_IV.match(line)
             if match:
-                logger.warning("RE_CALCY_IV matched: " + line)
                 values = match.groupdict()
-                logger.error(values)
+                logger.warn(values)
                 state = CALCY_SUCCESS
                 if values['cp'] == '-1' or values['level'] == '-1.0':
                     pass

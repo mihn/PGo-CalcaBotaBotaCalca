@@ -129,8 +129,8 @@ actions:
         iv_max__eq: 100
         appraised: false
       actions:
-        appraise:
-        # rename: "! Verify"
+        # appraise:
+        rename: "! Verify"
 
     # Renames luckyegg evo pokemons (except hundos)
     # - conditions:
