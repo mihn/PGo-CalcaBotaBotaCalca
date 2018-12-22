@@ -56,7 +56,7 @@ actions:
         name__in:
           - Unown
       actions:
-        rename-prefix: "♣ "
+        rename: "♣ {calcy}"
 
     # Renames babies
     - conditions:
@@ -72,7 +72,7 @@ actions:
           - Wynaut
           - Tyrogue
       actions:
-        rename-prefix: "♥ "
+        rename: "♥ {calcy}"
 
     # Renames Myth/Quest/Rare/Exclusive/Cool
     - conditions:
@@ -85,7 +85,7 @@ actions:
           - Celebi
           - Mew
       actions:
-        rename-prefix: "♦ "
+        rename: "♦ {calcy}"
 
     # Legendary/ExRaid/Mythical get renamed with custom prefix
     - conditions:
@@ -115,7 +115,7 @@ actions:
           - Marowak Alolan
           - Heltran
       actions:
-        rename-prefix: "·"
+        rename: "·{calcy}"
 
     # Renames hundos before everything else
     - conditions:
@@ -148,14 +148,14 @@ actions:
     - conditions:
         iv_max__ge: 95
       actions:
-        rename-prefix: "∞ "
+        rename: "∞ {calcy}"
 
     # For trading (high cp + low IV)
     - conditions:
         cp__ge: 1600
         iv_max__lt: 95
       actions:
-        rename-prefix: "‰ "
+        rename: "‰ {calcy}"
 
     # For trading (for candy)
     - conditions:
@@ -186,7 +186,7 @@ actions:
           - Porygon
           - Snorunt
       actions:
-        rename-prefix: "• "
+        rename: "• {calcy}"
 
     # Skips everything else below IV95
     - conditions:
@@ -195,7 +195,7 @@ actions:
     # Renames anything else that doesn't matches any rule above
     #  which, in theory, shouldn't happen, so it adds a prefix to fix the rules
     - actions:
-        rename-prefix: "¿ "
+        rename: "¿ {calcy}"
 
 
 
