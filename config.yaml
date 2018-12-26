@@ -16,24 +16,24 @@ locations:
     appraisal_box: [45, 1594, 1032, 1792]
 
 # Quick ones (without spoofer)
-waits:
-    next: 0.8
-    rename: 0.5
-    rename_ok: 1.5
-    pokemon_menu_button: 0.6
-    appraise_button: 1
-    calcy_appraisal_save_button: 3
-    continue_appraisal: 0.03
+# waits:
+#     next: 0.8
+#     rename: 0.5
+#     rename_ok: 1.5
+#     pokemon_menu_button: 0.6
+#     appraise_button: 1
+#     calcy_appraisal_save_button: 3
+#     continue_appraisal: 0.03
 
 # ## Slow ones
-# waits:
-#     next: 0.9
-#     rename: 1
-#     rename_ok: 2.1
-#     pokemon_menu_button: 1
-#     appraise_button: 1.4
-#     calcy_appraisal_save_button: 7 #4
-#     continue_appraisal: 0.05
+waits:
+    next: 1.1
+    rename: 1
+    rename_ok: 2.1
+    pokemon_menu_button: 1
+    appraise_button: 1.4
+    calcy_appraisal_save_button: 7 #4
+    continue_appraisal: 0.05
 
 blacklist:
     -
@@ -71,6 +71,8 @@ actions:
           - Budew
           - Wynaut
           - Tyrogue
+          - Meltan
+          - Azurill
       actions:
         rename: "♥ {calcy}"
 
@@ -152,7 +154,7 @@ actions:
 
     # For trading (high cp + low IV)
     - conditions:
-        cp__ge: 1600
+        cp__ge: 2000
         iv_max__lt: 95
       actions:
         rename: "‰ {calcy}"
@@ -184,7 +186,6 @@ actions:
           - Feebas
           - Mawile
           - Porygon
-          - Snorunt
       actions:
         rename: "• {calcy}"
 
