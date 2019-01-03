@@ -75,7 +75,7 @@ actions:
           - Azurill
           - Munchlax
       actions:
-        rename: "♥ {calcy}"
+        rename: "♥ {name}" #{iv}"
 
     # Renames Myth/Quest/Rare/Exclusive/Cool
     - conditions:
@@ -95,6 +95,9 @@ actions:
         name__in:
           - Mewtwo
           - Deoxys Normal
+          - Deoxys Attack
+          - Deoxys Defense
+          - Deoxys Speed
           - Giratina Altered
           - Articuno
           - Zapdos
@@ -184,8 +187,12 @@ actions:
           - Slakoth
           - Dratini
           - Feebas
-          - Mawile
           - Porygon
+          - Croagunk
+          - Skorupi
+          - Finneon
+          - Bronzor
+          - Lapras
       actions:
         rename: "• {calcy}"
 
