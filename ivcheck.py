@@ -157,17 +157,17 @@ class Main:
             # Works with most (if not all) of CalcyIV's numeric schemes.
             match = iv_regex.match(unicodedata.normalize('NFKD', clipboard))
             if match:
-                logger.debug('Clipboard matched against ' + str(iv_regex))
+                # logger.debug('Clipboard matched against ' + str(iv_regex))
                 d = match.groupdict()
                 if "iv" in d:
-                    d["iv"] = float(d["iv"])
+                    d["iv"] = int(d["iv"])
                     d["iv_min"] = d["iv"]
                     d["iv_max"] = d["iv"]
                 else:
                     for key in ["iv_min", "iv_max"]:
                         if key in d:
                             d[key] = float(d[key])
-                    d["iv"] = None
+                    d["iv"] = int((d['iv_max'] + d['iv_min']) / 2)  # funnyly averages iv_max and iv_min into an integer
                 return clipboard, d
 
         if args.regexp-skip is True:
@@ -294,7 +294,6 @@ class Main:
             match = RE_CALCY_IV.match(line)
             if match:
                 values = match.groupdict()
-                logger.warning(values)
                 state = CALCY_SUCCESS
                 if values['cp'] == '-1' or values['level'] == '-1.0':
                     pass
@@ -305,6 +304,7 @@ class Main:
                     clipboard, clipboard_values = await self.get_data_from_clipboard()
                     values = {**values, **clipboard_values}
                     values["calcy"] = clipboard
+                    logger.warning(values)
                     return state, values
 
             match = RE_RED_BAR.match(line)

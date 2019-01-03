@@ -128,7 +128,6 @@ actions:
 
     # Potential IV100 get appraised or renamed for later verification
     - conditions:
-        iv:
         iv_max__eq: 100
         appraised: false
       actions:
