@@ -33,7 +33,7 @@ formatter = ColoredFormatter("  %(log_color)s%(levelname)-8s%(reset)s | %(log_co
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-RE_CALCY_IV = re.compile(r"^./MainService\(\s*\d+\): Received values: Id: \d+ \((?P<name>.+)\), Nr: (?P<id>\d+), CP: (?P<cp>\-{0,1}\d+), Max HP: (?P<max_hp>\d+), Dust cost: (?P<dust_cost>\d+), Level: (?P<level>\-{0,1}[0-9\.]+), FastMove (?P<fast_move>.+), SpecialMove (?P<special_move>.+),Gender (?P<gender>\d), catchYear (?P<catch_year>.+), Level-up (true|false):$")
+RE_CALCY_IV = re.compile(r"^./MainService\(\s*\d+\): Received values: Id: \d+ \((?P<name>.+)\), Nr: (?P<id>\d+), CP: (?P<cp>\-{0,1}\d+), Max HP: (?P<max_hp>\d+), Dust cost: (?P<dust_cost>\d+), Level: (?P<level>\-{0,1}[0-9\.]+), FastMove (?P<fast_move>.+), SpecialMove (?P<special_move>.+),Gender (?P<gender>\-{0,1}\d+), catchYear (?P<catch_year>.+), Level-up (true|false):$")
 RE_RED_BAR = re.compile(r"^.+\(\s*\d+\): Screenshot #\d has red error box at the top of the screen$")
 RE_SUCCESS = re.compile(r"^.+\(\s*\d+\): calculateScanOutputData finished after \d+ms$")
 RE_SCAN_INVALID = re.compile(r"^.+\(\s*\d+\): Scan invalid$")
@@ -43,22 +43,16 @@ CALCY_RED_BAR = 1
 CALCY_SCAN_INVALID = 2
 
 class Loader(yaml.SafeLoader):
-
     def __init__(self, stream):
-
         self._root = os.path.split(stream.name)[0]
-
         super(Loader, self).__init__(stream)
 
     def include(self, node):
-
         filename = os.path.join(self._root, self.construct_scalar(node))
-
         with open(filename, 'r') as f:
             return yaml.load(f, Loader)
 
 Loader.add_constructor('!include', Loader.include)
-
 
 class Main:
     def __init__(self, args):
@@ -190,11 +184,6 @@ class Main:
                     d["iv"] = int((d['iv_max'] + d['iv_min']) / 2)  # funnyly averages iv_max and iv_min into an integer
                 return clipboard, d
 
-        if args.regexp-skip is True:
-            logger.warning('It seems that clicking OK took too long or your interent connection is unstable. I\'ll wait a while and try to continue.')
-            asyncio.sleep(5)
-        else:
-            raise RegexDidNotMatch()
 
     async def check_appraising(self):
         """
@@ -365,8 +354,6 @@ if __name__ == '__main__':
                         help="Change default pid directory")
     parser.add_argument('--verbose', '-v', default=False, action='store_true',
                         help="Enables dumping of the device's logcat. Spams quite a lot.")
-    # parser.add_argument('--regexp-skip', '-e', default=False, action='store_true',
-    #                     help="Does not fails when matching regexps, to deal with intermittent issues on your internet connection (use with care).")
     parser.add_argument('--stop-after', default=None, type=int,
                             help="Stop after X pokemon")
     args = parser.parse_args()

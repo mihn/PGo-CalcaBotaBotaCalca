@@ -15,7 +15,7 @@ formatter = ColoredFormatter("  %(log_color)s%(levelname)-8s%(reset)s | %(log_co
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-RE_CLIPBOARD_TEXT = re.compile("^./ClipboardReceiver\(\s*\d+\): Clipboard text: (.+)$")
+RE_CLIPBOARD_TEXT = re.compile(r"^./ClipboardReceiver\(\s*\d+\): Clipboard text: (.+)$")
 
 class CalcyIVError(Exception):
     # logger.error('CalcyIV did not find any combinations.')
@@ -31,10 +31,6 @@ class PhoneNotConnectedError(Exception):
 
 class LogcatNotRunningError(Exception):
     # logger.error('For some reason, I can\'t run the logcat on your phone! :( Try to run \'adb logcat\' and see if something happens. Message the developers as well!')
-    pass
-
-class RegexDidNotMatch(Exception):
-    # logger.error('I cant find the IVs of your pokemon! Check the "iv_regexes" section on config.yaml.\nIf this is an intermitent error, try passing the \'--regexp-skip\' argument to ivcheck.py')
     pass
 
 class PokemonGo(object):
