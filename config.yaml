@@ -11,86 +11,47 @@ locations:
     pokemon_menu_button: [940, 1700]
     appraise_button: [940, 1315]
     continue_appraisal: [540, 1100]
-    calcy_appraisal_save_button: [880, 800]
+    calcy_appraisal_save_button: [870, 870]
     dismiss_calcy: [540, 1170]
     appraisal_box: [45, 1594, 1032, 1792]
 
 # Quick ones (without spoofer)
-# waits:
-#     next: 0.8
-#     rename: 0.5
-#     rename_ok: 1.5
-#     pokemon_menu_button: 0.6
-#     appraise_button: 1
-#     calcy_appraisal_save_button: 3
-#     continue_appraisal: 0.03
-
-# ## Slow ones
 waits:
-    next: 1.1
-    rename: 1
-    rename_ok: 2.1
-    pokemon_menu_button: 1
-    appraise_button: 1.4
-    calcy_appraisal_save_button: 7 #4
-    continue_appraisal: 0.05
+    next: 0.8
+    rename: 0.5
+    rename_ok: 1.5
+    pokemon_menu_button: 0.6
+    appraise_button: 1
+    calcy_appraisal_save_button: 3
+    continue_appraisal: 0.03
+
+# # ## Slow ones
+# waits:
+#     next: 1.1
+#     rename: 1
+#     rename_ok: 2.1
+#     pokemon_menu_button: 1
+#     appraise_button: 1.4
+#     calcy_appraisal_save_button: 7 #4
+#     continue_appraisal: 0.05
 
 blacklist:
     -
 
 actions:
-    # Uncomment this and comment everything else to NOT rename any pokemon, just scan for adding to history
-    # - conditions:
-    #     success: true
-    # - conditions:
-    #     success: false
-
-    # Failed scans get renamed for later verification
+    # Easy bypass block for quick jobbies
     - conditions:
         success: false
       actions:
-        rename: "! Failed"
+        rename: "!verify"
 
-    # Renames Unowns with prefix
     - conditions:
-        name__in:
-          - Unown
+        success: true
+        iv_max__gt: 90
       actions:
-        rename: "♣ {calcy}"
+        rename: "» {calcy}"
 
-    # Renames babies
-    - conditions:
-        name__in:
-          - Pichu
-          - Togepi
-          - Igglybuff
-          - Cleffa
-          - Elekid
-          - Smoochum
-          - Magby
-          - Budew
-          - Wynaut
-          - Tyrogue
-          - Meltan
-          - Azurill
-          - Munchlax
-      actions:
-        rename: "♥ {name}" #{iv}"
-
-    # Renames Myth/Quest/Rare/Exclusive/Cool
-    - conditions:
-        name__in:
-          - Riolu
-          - Spiritomb
-          - Spinda
-          - Shedinja
-          - Shinx
-          - Celebi
-          - Mew
-      actions:
-        rename: "♦ {calcy}"
-
-    # Legendary/ExRaid/Mythical get renamed with custom prefix
+    # Legendary/ExRaid/Mythica
     - conditions:
         name__in:
           - Mewtwo
@@ -121,89 +82,171 @@ actions:
           - Marowak Alolan
           - Heltran
       actions:
-        rename: "·{calcy}"
+        rename: "» {calcy}"
 
-    # Renames hundos before everything else
     - conditions:
-        iv__eq: 100
+        success: true
       actions:
-        rename-calcy:
+        rename: "× {calcy}"
+    # # Failed scans get renamed for later verification
+    # - conditions:
+    #     success: false
+    #   actions:
+    #     rename: "! Failed"
 
-    # Potential IV100 get appraised or renamed for later verification
-    - conditions:
-        iv_max__eq: 100
-        appraised: false
-      actions:
-        # appraise:
-        rename: "! Verify"
-
-    # Renames luckyegg evo pokemons (except hundos)
+    # # Renames Unowns with prefix
     # - conditions:
     #     name__in:
-    #       - Pidgey
-    #       - Weedle
-    #       - Whishmur
-    #       - Wurmple
-    #       - Caterpie
+    #       - Unown
     #   actions:
-    #     rename-prefix: "‰ "
+    #     rename: "♣ {calcy}"
 
-    # Renames everything between (max) IV95 and 100 with a prefix,
-    # for easily transfering shitty IV95-100 common pokemons afterwards
-    - conditions:
-        iv_max__ge: 95
-      actions:
-        rename: "∞ {calcy}"
+    # # Renames babies
+    # - conditions:
+    #     name__in:
+    #       - Pichu
+    #       - Togepi
+    #       - Igglybuff
+    #       - Cleffa
+    #       - Elekid
+    #       - Smoochum
+    #       - Magby
+    #       - Budew
+    #       - Wynaut
+    #       - Tyrogue
+    #       - Meltan
+    #       - Azurill
+    #       - Munchlax
+    #   actions:
+    #     rename: "♥ {name}" #{iv}"
 
-    # For trading (high cp + low IV)
-    - conditions:
-        cp__ge: 2000
-        iv_max__lt: 95
-      actions:
-        rename: "‰ {calcy}"
+    # # Renames Myth/Quest/Rare/Exclusive/Cool
+    # - conditions:
+    #     name__in:
+    #       - Riolu
+    #       - Spiritomb
+    #       - Spinda
+    #       - Shedinja
+    #       - Shinx
+    #       - Celebi
+    #       - Mew
+    #   actions:
+    #     rename: "♦ {calcy}"
 
-    # For trading (for candy)
-    - conditions:
-        name__in:
-          - Tyranitar
-          - Dragonite
-          - Snorlax
-          - Machamp
-          - Blissey
-          - Salamence
-          - Chansey
-          - Larvitar
-          - Pupitar
-          - Bagon
-          - Shelgon
-          - Beldum
-          - Metang
-          - Ralts
-          - Machop
-          - Machoke
-          - Pineco
-          - Shinx
-          - Lickitung
-          - Slakoth
-          - Dratini
-          - Feebas
-          - Porygon
-          - Croagunk
-          - Skorupi
-          - Finneon
-          - Bronzor
-          - Lapras
-      actions:
-        rename: "• {calcy}"
+    # # Legendary/ExRaid/Mythical get renamed with custom prefix
+    # - conditions:
+    #     name__in:
+    #       - Mewtwo
+    #       - Deoxys Normal
+    #       - Deoxys Attack
+    #       - Deoxys Defense
+    #       - Deoxys Speed
+    #       - Giratina Altered
+    #       - Articuno
+    #       - Zapdos
+    #       - Moltres
+    #       - Raikou
+    #       - Gengar
+    #       - Entei
+    #       - Suicune
+    #       - Ho-Oh
+    #       - Lugia
+    #       - Regirock
+    #       - Regice
+    #       - Registeel
+    #       - Latias
+    #       - Latios
+    #       - Kyogre
+    #       - Groudon
+    #       - Rayquaza
+    #       - Absol
+    #       - Cresselia
+    #       - Marowak Alolan
+    #       - Heltran
+    #   actions:
+    #     rename: "·{calcy}"
 
-    # Skips everything else below IV95
-    - conditions:
-        iv_max__lt: 95
+    # # Renames hundos before everything else
+    # - conditions:
+    #     iv__eq: 100
+    #   actions:
+    #     rename-calcy:
 
-    # Renames anything else that doesn't matches any rule above
-    #  which, in theory, shouldn't happen, so it adds a prefix to fix the rules
-    - actions:
-        rename: "¿ {calcy}"
+    # # Potential IV100 get appraised or renamed for later verification
+    # - conditions:
+    #     iv_max__eq: 100
+    #     appraised: false
+    #   actions:
+    #     appraise:
+    #     # rename: "! Verify"
+
+    # # Renames luckyegg evo pokemons (except hundos)
+    # # - conditions:
+    # #     name__in:
+    # #       - Pidgey
+    # #       - Weedle
+    # #       - Whishmur
+    # #       - Wurmple
+    # #       - Caterpie
+    # #   actions:
+    # #     rename-prefix: "‰ "
+
+    # # Renames everything between (max) IV95 and 100 with a prefix,
+    # # for easily transfering shitty IV95-100 common pokemons afterwards
+    # - conditions:
+    #     iv_max__ge: 95
+    #   actions:
+    #     rename: "∞ {calcy}"
+
+    # # For trading (high cp + low IV)
+    # - conditions:
+    #     cp__ge: 2000
+    #     iv_max__lt: 95
+    #   actions:
+    #     rename: "• {calcy}"
+
+    # # For trading (for candy)
+    # - conditions:
+    #     name__in:
+    #       - Tyranitar
+    #       - Dragonite
+    #       - Snorlax
+    #       - Machamp
+    #       - Blissey
+    #       - Salamence
+    #       - Chansey
+    #       - Larvitar
+    #       - Pupitar
+    #       - Bagon
+    #       - Shelgon
+    #       - Beldum
+    #       - Metang
+    #       - Ralts
+    #       - Machop
+    #       - Machoke
+    #       - Pineco
+    #       - Shinx
+    #       - Lickitung
+    #       - Slakoth
+    #       - Dratini
+    #       - Feebas
+    #       - Porygon
+    #       - Croagunk
+    #       - Skorupi
+    #       - Finneon
+    #       - Bronzor
+    #       - Lapras
+    #   actions:
+    #     rename: "• {calcy}"
+
+    # # Skips everything else below IV95
+    # - conditions:
+    #     iv_max__lt: 95
+
+    # # Renames anything else that doesn't matches any rule above
+    # #  which, in theory, shouldn't happen, so it adds a prefix to fix the rules
+    # - actions:
+    #     rename: "¿ {calcy}"
 
 
 
