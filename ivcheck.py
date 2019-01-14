@@ -26,9 +26,9 @@ ops = {
 }
 
 logger = logging.getLogger('ivcheck')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
+ch.setLevel(logging.INFO)
 formatter = ColoredFormatter("  %(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s")
 ch.setFormatter(formatter)
 logger.addHandler(ch)
@@ -99,7 +99,7 @@ class Main:
 
         with open(path, "r") as f:
             self.config = yaml.load(f, Loader)
-            print(path, self.config)
+            # print(path, self.config)
         self.iv_regexes = [re.compile(r) for r in self.config["iv_regexes"]]
         await self.p.start_logcat()
         count = 0
@@ -128,7 +128,7 @@ class Main:
                 await self.tap("pokemon_menu_button")
                 await self.tap("appraise_button")
                 await self.p.send_intent("tesmath.calcy.ACTION_ANALYZE_SCREEN", "tesmath.calcy/.IntentReceiver", [["silentMode", True]])
-                for i in range(0, 4):  # we can do it four times before beggining to screencap
+                for _ in range(0, 4):  # we can do it four times before beggining to screencap
                     await self.tap("continue_appraisal")
                 while await self.check_appraising():
                     await self.tap("continue_appraisal")
