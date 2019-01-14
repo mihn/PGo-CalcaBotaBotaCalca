@@ -1,2 +1,4 @@
-Pillow==5.3.0
+colorlog==3.1.4
+Pillow==5.4.1
+pid==2.2.1
 PyYAML==3.13
