@@ -82,19 +82,20 @@ Rename bad IV Abra, Gastly and Machop to ".TRADE" so you can trade them later.
 # _(now, a decent)_ FAQ
 1. It taps in the wrong locations / doesn't work / automatically called my mother:
 
-    You probably need to edit the `locations:` in config.yaml, the defaults are for a 1080p phone. **You can find where the spots are supposed to be in `docs/locations`!**
+    You probably need to edit the `locations:` in config.yaml, the defaults are for a 1080p phone. **You can find where the spots are supposed to be in [docs/locations](docs/locations)!**
 
     To find out the coordinates, enable *Pointer Location* in your phone's *Developer Settings*. If you're lazy like me, just type the code below with your phone connected:
 
     - To enable:
-            adb shell content insert --uri content://settings/system --bind name:s:pointer_location --bind value:i:1
-                If that doesn't work, use this:
-            adb shell settings put system pointer_location 1
+                adb shell content insert --uri content://settings/system --bind name:s:pointer_location --bind value:i:1
+                    If that doesn't work, use this:
+                adb shell settings put system pointer_location 1
 
     - To disable
-            adb shell content insert --uri content://settings/system --bind name:s:pointer_location --bind value:i:0
-                If that doesn't work, use this:
-            adb shell settings put system pointer_location 0
+
+        adb shell content insert --uri content://settings/system --bind name:s:pointer_location --bind value:i:0
+            If that doesn't work, use this:
+        adb shell settings put system pointer_location 0
 
 2. It's not pasting the pokémon's name
 
