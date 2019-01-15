@@ -12,7 +12,7 @@ This script essentially blindly sends touch events to your phone. If a popup app
 - Install adb, make sure it's on your systems PATH, alternatively you can place adb in the same folder as main.py
 - Install [clipper](https://github.com/majido/clipper) and start the service
 - Install Python >=3.7 (older versions will not work)
-- Run pip install -r requirements.txt
+- Run `pip install -r requirements.txt`
 - Change your Calcy IV renaming scheme to `$IV%Range$$MoveTypes$$AttIV$$DefIV$$HpIV$$Appraised$` or if you're used to regular expressions, change your `iv_regexes` setting to match your renaming scheme.
     - Alternatively, if you want to keep your renaming string without too much fuss, check [question 5](#user-content-now-a-decent-faq) in the FAQ.
 - Edit config.yaml locations for your phone
@@ -25,37 +25,50 @@ This script essentially blindly sends touch events to your phone. If a popup app
 Actions allow you to define new ways of renaming your pokémon, outside of the usual Calcy IV renaming scheme. Actions are processed from first to last, and the first one to have all its conditions pass is used.
 
 **Conditions:**
-- name - The pokémon name.
-- iv - The exact IV (Note: this will only be set if Calcy IV has discovered an exact IV. Use `iv_avg` for a solution).
-- iv_avg - The average between `iv_min` and `iv_max` below. (Note: This is not the true average, Calcy is a bit smarter, but it works).
-- iv_min - The minimum possible IV (This will be set even if Calcy IV pulls an exact IV).
-- iv_max - The maximum possible IV (This will be set even if Calcy IV pulls an exact IV).
-- success - Whether the calcy IV scan succeeded `[true / false]` (Note: Will be false if pokémon is blacklisted).
-- blacklist - Whether the pokémon is in the blacklist `[true / false]`.
-- appraised - Whether the pokémon has been appraised or not `[true / false]`.
-- id - The pokémon pokedex ID.
-- cp - The pokémon CP.
-- max_hp - The pokémon max hp.
-- dust_cost - The dust cost to power up.
-- level - The pokémon level (1-40).
-- fast_move - The pokémon fast move (Usually only visible on fully evolved pokémon).
-- special_move - The pokémon special/charged move (Usually only visible on fully evolved pokémon).
-- gender - The pokémon gender `[1 = male / 2 = female]`.
+- name: The pokémon name.
+- iv: The exact IV
+    _Note: this will only be set if Calcy IV has discovered an exact IV. Use `iv_avg` for a solution._
+- iv_avg: The average between `iv_min` and `iv_max` below.
+    _Note: This is not the true average, Calcy is a bit smarter, but it works._
+- iv_min: The minimum possible IV.
+    _This will be set even if Calcy IV pulls an exact IV_
+- iv_max: The maximum possible IV.
+    _This will be set even if Calcy IV pulls an exact IV_
+- success: Whether the calcy IV scan succeeded `[true / false]`.
+    _Note: Will be false if pokémon is blacklisted_
+- blacklist: Whether the pokémon is in the blacklist `[true / false]`.
+- appraised: Whether the pokémon has been appraised or not `[true / false]`.
+- id: The pokémon pokedex ID.
+- cp: The pokémon CP.
+- max_hp: The pokémon max hp.
+- dust_cost: The dust cost to power up.
+- level: The pokémon level `[1-40]`
+- fast_move: The pokémon fast move.
+    _Usually only visible on fully evolved pokémon_
+- special_move: The pokémon special/charged move.
+    _Usually only visible on fully evolved pokémon_
+- gender: The pokémon gender `[1 = male / 2 = female]`.
 
 _Conditions also support the following operators:_
-- lt - Less than
-- le - Less than or equal to
-- eq - Equal to
-- ne - Not equal to
-- ge - Greater than or equal to
-- gt - Greater than
-- in - In list
-- not_in - Not in list
+- lt: Less than
+- le: Less than or equal to
+- eq: Equal to
+- ne: Not equal to
+- ge: Greater than or equal to
+- gt: Greater than
+- in: In list
+- not_in: Not in list
 
 **Actions:**
-- rename - Allows you to specify your own name for the pokémon. You can also use any of the above conditions as variables. For example `{name} {iv}`. In addition, there is also a {calcy} variable, which contains Calcys suggested name.
-- favorite - Favorite the pokémon
-- appraise - Appraise the pokémon
+- `rename: "string"`
+    Allows you to specify your own name for the pokémon.
+
+    - You can also use any of the above conditions as variables, for example `{name} {iv}`.
+    - In addition, there is also a {calcy} variable, which contains Calcys suggested name.
+- `favorite:`
+    Favorite the pokémon
+- `appraise:`
+    Appraise the pokémon
 
 ### Actions examples
 Faster rename run by skipping rename on pokémon with <90% IVs. Rename any pokémon that failed to scan as ".FAILED" so you know which ones failed to scan, and which ones are skipped as trash.
