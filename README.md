@@ -79,10 +79,10 @@ Rename bad IV Abra, Gastly and Machop to ".TRADE" so you can trade them later.
         rename: ".TRADE"
 ```
 
-# (Now, proper) Frequently Asked Questions
-- It taps in the wrong locations / doesn't work / automatically called my mother:
-    - You probably need to edit the `locations:` in config.yaml, the defaults are for a 1080p phone. **You can find where the spots are supposed to be in `docs/locations`!**
-    - To find out the coordinates, enable **Pointer Location** in your phone's **Developer Settings**. If you're lazy like me, just type the code below with your phone connected:
+# _(now, a decent)_ FAQ
+1. It taps in the wrong locations / doesn't work / automatically called my mother:
+   You probably need to edit the `locations:` in config.yaml, the defaults are for a 1080p phone. **You can find where the spots are supposed to be in `docs/locations`!**
+   To find out the coordinates, enable **Pointer Location** in your phone's **Developer Settings**. If you're lazy like me, just type the code below with your phone connected:
         - To enable:
                 adb shell content insert --uri content://settings/system --bind name:s:pointer_location --bind value:i:1
                     If that doesn't work, use this:
@@ -93,27 +93,30 @@ Rename bad IV Abra, Gastly and Machop to ".TRADE" so you can trade them later.
                     If that doesn't work, use this:
                 adb shell settings put system pointer_location 0
 
-- It's not pasting the pokémon's name
-    - Unfortunately, the paste key event doesn't work on older versions of Android. Use the `--nopaste` argument to paste it by tapping (make sure you edit the `locations:` accordingly).
+2. It's not pasting the pokémon's name
+   Unfortunately, the paste key event doesn't work on older versions of Android. Use the `--nopaste` argument to paste it by tapping (make sure you edit the `locations:` accordingly).
 
-- It's going too fast for my phone! :O
-    - This is being developed and tested on a OnePlus 3T and a Google Pixel, so the script runs quite fast _(until the phone gets hot, that is)_. You can slow it down by increasing the `waits:` in config.yaml.
+3. It's going too fast for my phone! :O
+   This is being developed and tested on a OnePlus 3T and a Google Pixel, so the script runs quite fast _(until the phone gets hot, that is)_. You can slow it down by increasing the `waits:` in config.yaml.
 
-- Can it do multiple phones at the same time
-    - Sure, you just have to run multiple instances. Run `adb devices` to get the device ids for your phones, then run multiple instances of the script with --device_id=XXXXX
+4. Can it do multiple phones at the same time
+   Sure, you just have to run multiple instances. Run `adb devices` to get the device ids for your phones, then run multiple instances of the script with --device_id=XXXXX
 
-- _I don't even know what a regular expression is!_ How can I keep my Calcy string *and* use the script, without needing to ask for help on the [Discord](https://discord.gg/skUAWKg)?
-    - **TL;DR: there's a GIF below, run the command from step 4 and follow the image.**
-    - There's a neat trick in which you add a lot of spaces to the end of Calcy's string followed by `IV%Range$`. This make it so whenever you paste the pokémon's name in the game, you don't see anything after the spacesbecause of 12-char limitation. If you want to try it out, do as follow:
+5. [](#space_trick)_I don't even know what a regular expression is!_ How can I keep my Calcy string *and* use the script, without needing to ask for help on the [Discord](https://discord.gg/skUAWKg)?
+   **TL;DR: there's a GIF below, run the command from step 4 and follow the image.**
+   There's a neat trick in which you add a lot of spaces to the end of Calcy's string followed by `IV%Range$`. This make it so whenever you paste the pokémon's name in the game, you don't see anything after the spacesbecause of 12-char limitation. If you want to try it out, do as follow:
         1. Connect your phone to your computer (check with `adb devices`)
         2. Make sure `clipper` service is running on your phone (check with `adb shell am broadcast -a clipper.get`)
         3. Open CalcyIV, go to the *Renaming* section and click at the end of your string.
-        4. Run the following command: `adb shell am broadcast -a clipper.set -e text $'\u2003\u2003\u2003\u2003\u2003'`
-        5. Now you have spaces on your phone clipboard. Either manually hold and paste on your phone, or simply run: `adb shell input keyevent KEYCODE_PASTE`
+        4. Run the following commands (if the latter doesn't work, just paste manually):
+                adb shell am broadcast -a clipper.set -e text $'\u2003\u2003\u2003\u2003\u2003'
+                adb shell input keyevent KEYCODE_PASTE
+
         6. Add *IV% RANGE* after the spaces. Repeat the process for the *Not fully evolved:* section as well.
         7. Change your `iv_regexes:` to the following:
                 iv_regexes:
                     - ^.+  +(?P<iv>\d+)$
                     - ^.+  +(?P<iv_min>\d+)\-(?P<iv_max>\d+)$
+
         8. Done! Oh no, wait, there's a GIF as well! :)
         ![](docs/tutorial_spaces.gif?raw=true)
