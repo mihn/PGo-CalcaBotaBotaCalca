@@ -15,6 +15,7 @@ This script essentially blindly sends touch events to your phone. If a popup app
 - Run `pip install -r requirements.txt`
 - Change your Calcy IV renaming scheme to `$IV%Range$$MoveTypes$$AttIV$$DefIV$$HpIV$$Appraised$` or if you're used to regular expressions, change your `iv_regexes` setting to match your renaming scheme.
     - Alternatively, if you want to keep your renaming string without too much fuss, check [question 5](#user-content-now-a-decent-faq) in the FAQ.
+- Copy or rename `config.example.yaml` to `config.yaml`.
 - Edit config.yaml locations for your phone
     - The defaults are for a Oneplus 3T and should work with any 1080p phone that does not have soft buttons.
     - Each setting is an X,Y location. You can turn on Settings > Developer options > Pointer location to assist you in gathering X,Y locations or run the code on [question 1](#user-content-now-a-decent-faq) in the FAQ.
