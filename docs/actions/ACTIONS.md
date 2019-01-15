@@ -35,6 +35,8 @@ _For Gboard users, the character in parenthesis indicates which key on Gboard co
 - `=`
 - `±`
 - `»` _(Inside key `"`)_
+- `§` _(Inside key `¶`)
+- `¶`
 - `÷`
 - `×`
 - `∅` _(Inside key `0`)_
@@ -57,3 +59,9 @@ _For Gboard users, the character in parenthesis indicates which key on Gboard co
 - `♦` _(Inside key `•`)_
 - `✓`
 - `∞` _(Inside key `=`)_
+- Numbers
+- Letters
+- `μ` _(Inside key `π`)_
+- `Π` _(Inside key `π`)_
+- `π`
+- `Ω` _(Inside key `π`)_
