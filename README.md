@@ -21,67 +21,68 @@ This script essentially blindly sends touch events to your phone. If a popup app
     - Each location setting has a corresponding screenshot in [docs/locations](docs/locations).
 - Once you've done all that, run `python ivcheck.py`
 
-## Actions and rules
+## Rulesets and actions
 Actions allow you to define new ways of renaming your pokémon, outside of the usual Calcy IV renaming scheme. Actions are processed from first to last, and the first one to have all its conditions pass is used.
 
 **Conditions:**
-- name: The pokémon name.
-- iv: The exact IV
+- **name**: The pokémon name.
+- **iv**: The exact IV
 
     _Note: this will only be set if Calcy IV has discovered an exact IV. Use `iv_avg` for a solution._
 
-- iv_avg: The average between `iv_min` and `iv_max` below.
+- **iv_avg**: The average between `iv_min` and `iv_max` below.
 
     _Note: This is not the true average, Calcy is a bit smarter, but it works._
 
-- iv_min: The minimum possible IV.
+- **iv_min**: The minimum possible IV.
 
     _This will be set even if Calcy IV pulls an exact IV_
 
-- iv_max: The maximum possible IV.
+- **iv_max**: The maximum possible IV.
 
     _This will be set even if Calcy IV pulls an exact IV_
 
-- success: Whether the calcy IV scan succeeded `[true / false]`.
+- **success**: Whether the calcy IV scan succeeded `[true / false]`.
 
     _Note: Will be false if pokémon is blacklisted_
 
-- blacklist: Whether the pokémon is in the blacklist `[true / false]`.
-- appraised: Whether the pokémon has been appraised or not `[true / false]`.
-- id: The pokémon pokedex ID.
-- cp: The pokémon CP.
-- max_hp: The pokémon max hp.
-- dust_cost: The dust cost to power up.
-- level: The pokémon level `[1-40]`
-- fast_move: The pokémon fast move.
+- **blacklist**: Whether the pokémon is in the blacklist `[true / false]`.
+- **appraised**: Whether the pokémon has been appraised or not `[true / false]`.
+- **id**: The pokémon pokedex ID.
+- **cp**: The pokémon CP.
+- **max_hp**: The pokémon max hp.
+- **dust_cost**: The dust cost to power up.
+- **level**: The pokémon level `[1-40]`
+- **fast_move**: The pokémon fast move.
 
     _Usually only visible on fully evolved pokémon_
 
-- special_move: The pokémon special/charged move.
+- **special_move**: The pokémon special/charged move.
 
     _Usually only visible on fully evolved pokémon_
 
-- gender: The pokémon gender `[1 = male / 2 = female]`.
+- **gender**: The pokémon gender `[1 = male / 2 = female]`.
 
 _Conditions also support the following operators:_
 
-- lt: Less than
-- le: Less than or equal to
-- eq: Equal to
-- ne: Not equal to
-- ge: Greater than or equal to
-- gt: Greater than
-- in: In list
-- not_in: Not in list
+- **lt**: Less than
+- **le**: Less than or equal to
+- **eq**: Equal to
+- **ne**: Not equal to
+- **ge**: Greater than or equal to
+- **gt**: Greater than
+- **in**: In list
+- **not_in**: Not in list
 
 **Actions:**
+
 - `rename: "string"`
 
     Allows you to specify your own name for the pokémon.
 
-    - You can also use any of the above conditions as variables, for example `{name} {iv}`.
+    - The `{calcy}` variable uses the renaming scheme you defined on CalcyIV.
 
-    - In addition, there is also a {calcy} variable, which contains Calcys suggested name.
+    - In addition, you can use any of the above conditions as variables, for example `{name} {iv}`.
 
 - `favorite:`
 
@@ -91,7 +92,10 @@ _Conditions also support the following operators:_
 
     Appraise the pokémon
 
-### Actions examples
+### Ruleset examples
+
+**Check [docs/actions](docs/actions) for fully featured examples. Also, check [ACTIONS.md](docs/actions/ACTIONS.md) for a sorting table of special characters, for those who'd like to sort by A-Z in a custom order.**
+
 1. Faster rename run by skipping rename on pokémon with <90% IVs. Rename any pokémon that failed to scan as ".FAILED" so you know which ones failed to scan, and which ones are skipped as trash.
     ```yaml
     actions:
@@ -117,17 +121,23 @@ _Conditions also support the following operators:_
             rename: ".TRADE"
     ```
 
-3. Rename easy evolving pokémons (for XP) with a custom syntax, bypassing Calcy's scheme:
+3. Rename babies pokémons with a custom syntax, bypassing Calcy's renaming scheme. A 78IV Magby would become "♥ Magby78".
     ```yaml
     - conditions:
         name__in:
-          - Pidgey
-          - Weedle
-          - Whishmur
-          - Wurmple
-          - Caterpie
+          - Pichu
+          - Togepi
+          - Igglybuff
+          - Cleffa
+          - Elekid
+          - Smoochum
+          - Magby
+          - Budew
+          - Wynaut
+          - Tyrogue
+          - Azurill
       actions:
-        rename-prefix: "‰ "
+        rename: "♥ {name}{iv_avg}"
     ```
 
 # _(now, a decent)_ FAQ
