@@ -13,7 +13,7 @@ This script essentially blindly sends touch events to your phone. If a popup app
 - Install Python >=3.7 (older versions will not work)
 - Run pip install -r requirements.txt
 - Change your Calcy IV renaming scheme to `$IV%Range$$MoveTypes$$AttIV$$DefIV$$HpIV$$Appraised$` or if you're used to regular expressions, change your `iv_regexes` setting to match your renaming scheme.
-    - Alternatively, if you want to keep your renaming string without too much fuss, check [this question](#space_trick) in the FAQ.
+    - Alternatively, if you want to keep your renaming string without too much fuss, check [question 5](#user-content-now-a-decent-faq) in the FAQ.
 - Edit config.yaml locations for your phone (The defaults are for a oneplus 3T and should work with any 1080p phone that does not have soft buttons). Each setting is an X,Y location. You can turn on Settings > Developer options > Pointer location to assist you in gathering X,Y locations. Each location setting has a corresponding screenshot in docs/locations.
 - Once you've done all that, run `python ivcheck.py`
 
@@ -83,16 +83,18 @@ Rename bad IV Abra, Gastly and Machop to ".TRADE" so you can trade them later.
 1. It taps in the wrong locations / doesn't work / automatically called my mother:
 
     You probably need to edit the `locations:` in config.yaml, the defaults are for a 1080p phone. **You can find where the spots are supposed to be in `docs/locations`!**
-    To find out the coordinates, enable **Pointer Location** in your phone's **Developer Settings**. If you're lazy like me, just type the code below with your phone connected:
-        - To enable:
-                adb shell content insert --uri content://settings/system --bind name:s:pointer_location --bind value:i:1
-                    If that doesn't work, use this:
-                adb shell settings put system pointer_location 1
 
-        - To disable
-                adb shell content insert --uri content://settings/system --bind name:s:pointer_location --bind value:i:0
-                    If that doesn't work, use this:
-                adb shell settings put system pointer_location 0
+    To find out the coordinates, enable *Pointer Location* in your phone's *Developer Settings*. If you're lazy like me, just type the code below with your phone connected:
+
+    - To enable:
+            adb shell content insert --uri content://settings/system --bind name:s:pointer_location --bind value:i:1
+                If that doesn't work, use this:
+            adb shell settings put system pointer_location 1
+
+    - To disable
+            adb shell content insert --uri content://settings/system --bind name:s:pointer_location --bind value:i:0
+                If that doesn't work, use this:
+            adb shell settings put system pointer_location 0
 
 2. It's not pasting the pokémon's name
 
@@ -106,23 +108,28 @@ Rename bad IV Abra, Gastly and Machop to ".TRADE" so you can trade them later.
 
     Sure, you just have to run multiple instances. Run `adb devices` to get the device ids for your phones, then run multiple instances of the script with --device_id=XXXXX
 
-5. [](#space_trick)_I don't even know what a regular expression is!_ How can I keep my Calcy string *and* use the script, without needing to ask for help on the [Discord](https://discord.gg/skUAWKg)?
+5. _I don't even know what a regular expression is!_ How can I keep my Calcy string *and* use the script, without needing to ask for help on the [Discord](https://discord.gg/skUAWKg)?
 
     **TL;DR: there's a GIF below, run the command from step 4 and follow the image.**
 
     There's a neat trick in which you add a lot of spaces to the end of Calcy's string followed by `IV%Range$`. This make it so whenever you paste the pokémon's name in the game, you don't see anything after the spacesbecause of 12-char limitation. If you want to try it out, do as follow:
-        1. Connect your phone to your computer (check with `adb devices`)
-        2. Make sure `clipper` service is running on your phone (check with `adb shell am broadcast -a clipper.get`)
-        3. Open CalcyIV, go to the *Renaming* section and click at the end of your string.
-        4. Run the following commands (if the latter doesn't work, just paste manually):
-                adb shell am broadcast -a clipper.set -e text $'\u2003\u2003\u2003\u2003\u2003'
-                adb shell input keyevent KEYCODE_PASTE
 
-        6. Add *IV% RANGE* after the spaces. Repeat the process for the *Not fully evolved:* section as well.
-        7. Change your `iv_regexes:` to the following:
-                iv_regexes:
-                    - ^.+  +(?P<iv>\d+)$
-                    - ^.+  +(?P<iv_min>\d+)\-(?P<iv_max>\d+)$
+    1. Connect your phone to your computer (check with `adb devices`)
 
-        8. Done! Oh no, wait, there's a GIF as well! :)
-        ![](docs/tutorial_spaces.gif?raw=true)
+    2. Make sure `clipper` service is running on your phone (check with `adb shell am broadcast -a clipper.get`)
+
+    3. Open CalcyIV, go to the *Renaming* section and click at the end of your string.
+
+    4. Run the following commands (if the latter doesn't work, just paste manually):
+            adb shell am broadcast -a clipper.set -e text $'\u2003\u2003\u2003\u2003\u2003'
+            adb shell input keyevent KEYCODE_PASTE
+
+    6. Add *IV% RANGE* after the spaces. Repeat the process for the *Not fully evolved:* section as well.
+
+    7. Change your `iv_regexes:` to the following:
+            iv_regexes:
+                - ^.+  +(?P<iv>\d+)$
+                - ^.+  +(?P<iv_min>\d+)\-(?P<iv_max>\d+)$
+
+    8. Done! Oh no, wait, there's a GIF as well! :)
+    ![](docs/tutorial_spaces.gif?raw=true)
