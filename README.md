@@ -27,15 +27,25 @@ Actions allow you to define new ways of renaming your pokémon, outside of the u
 **Conditions:**
 - name: The pokémon name.
 - iv: The exact IV
+
     _Note: this will only be set if Calcy IV has discovered an exact IV. Use `iv_avg` for a solution._
+
 - iv_avg: The average between `iv_min` and `iv_max` below.
+
     _Note: This is not the true average, Calcy is a bit smarter, but it works._
+
 - iv_min: The minimum possible IV.
+
     _This will be set even if Calcy IV pulls an exact IV_
+
 - iv_max: The maximum possible IV.
+
     _This will be set even if Calcy IV pulls an exact IV_
+
 - success: Whether the calcy IV scan succeeded `[true / false]`.
+
     _Note: Will be false if pokémon is blacklisted_
+
 - blacklist: Whether the pokémon is in the blacklist `[true / false]`.
 - appraised: Whether the pokémon has been appraised or not `[true / false]`.
 - id: The pokémon pokedex ID.
@@ -44,12 +54,17 @@ Actions allow you to define new ways of renaming your pokémon, outside of the u
 - dust_cost: The dust cost to power up.
 - level: The pokémon level `[1-40]`
 - fast_move: The pokémon fast move.
+
     _Usually only visible on fully evolved pokémon_
+
 - special_move: The pokémon special/charged move.
+
     _Usually only visible on fully evolved pokémon_
+
 - gender: The pokémon gender `[1 = male / 2 = female]`.
 
 _Conditions also support the following operators:_
+
 - lt: Less than
 - le: Less than or equal to
 - eq: Equal to
@@ -61,41 +76,59 @@ _Conditions also support the following operators:_
 
 **Actions:**
 - `rename: "string"`
+
     Allows you to specify your own name for the pokémon.
 
     - You can also use any of the above conditions as variables, for example `{name} {iv}`.
+
     - In addition, there is also a {calcy} variable, which contains Calcys suggested name.
+
 - `favorite:`
+
     Favorite the pokémon
+
 - `appraise:`
+
     Appraise the pokémon
 
 ### Actions examples
-Faster rename run by skipping rename on pokémon with <90% IVs. Rename any pokémon that failed to scan as ".FAILED" so you know which ones failed to scan, and which ones are skipped as trash.
-
-```
-actions:
-  - conditions:
-      success: false
+1. Faster rename run by skipping rename on pokémon with <90% IVs. Rename any pokémon that failed to scan as ".FAILED" so you know which ones failed to scan, and which ones are skipped as trash.
+    ```yaml
     actions:
-      rename: ".FAILED"
-  - conditions:
-      iv_max__ge: 90
-    actions:
-      rename: "{calcy}"
-```
+      - conditions:
+          success: false
+        actions:
+          rename: ".FAILED"
+      - conditions:
+          iv_max__ge: 90
+        actions:
+          rename: "{calcy}"
+    ```
 
-Rename bad IV Abra, Gastly and Machop to ".TRADE" so you can trade them later.
-```
+2. Rename bad IV Abra, Gastly and Machop to ".TRADE" so you can trade them later.
+    ```yaml
+        - conditions:
+            name__in:
+              - Abra
+              - Gastly
+              - Machop
+            iv_max__lt: 90
+          actions:
+            rename: ".TRADE"
+    ```
+
+3. Rename easy evolving pokémons (for XP) with a custom syntax, bypassing Calcy's scheme:
+    ```yaml
     - conditions:
         name__in:
-          - Abra
-          - Gastly
-          - Machop
-        iv_max__lt: 90
+          - Pidgey
+          - Weedle
+          - Whishmur
+          - Wurmple
+          - Caterpie
       actions:
-        rename: ".TRADE"
-```
+        rename-prefix: "‰ "
+    ```
 
 # _(now, a decent)_ FAQ
 1. It taps in the wrong locations / doesn't work / automatically called my mother:
@@ -108,13 +141,15 @@ Rename bad IV Abra, Gastly and Machop to ".TRADE" so you can trade them later.
         ```bash
         adb shell content insert --uri content://settings/system --bind name:s:pointer_location --bind value:i:1
             # If that doesn't work, use this:
-        adb shell settings put system pointer_location 1```
+        adb shell settings put system pointer_location 1
+        ```
 
     - To disable
         ```bash
         adb shell content insert --uri content://settings/system --bind name:s:pointer_location --bind value:i:0
             # If that doesn't work, use this:
-        adb shell settings put system pointer_location 0```
+        adb shell settings put system pointer_location 0
+        ```
 
 2. It's not pasting the pokémon's name!!1one
 
@@ -143,7 +178,8 @@ Rename bad IV Abra, Gastly and Machop to ".TRADE" so you can trade them later.
     4. Run the following commands (if the latter doesn't work, just _'paste'_ on your device manually):
         ```bash
         adb shell am broadcast -a clipper.set -e text $'\u2003\u2003\u2003\u2003\u2003'
-        adb shell input keyevent KEYCODE_PASTE```
+        adb shell input keyevent KEYCODE_PASTE
+        ```
 
     6. Add **IV% RANGE** after the spaces. Repeat the process for the *Not fully evolved:* section as well.
 
@@ -151,7 +187,9 @@ Rename bad IV Abra, Gastly and Machop to ".TRADE" so you can trade them later.
         ```yaml
         iv_regexes:
             - ^.+  +(?P<iv>\d+)$
-            - ^.+  +(?P<iv_min>\d+)\-(?P<iv_max>\d+)$```
+            - ^.+  +(?P<iv_min>\d+)\-(?P<iv_max>\d+)$
+        ```
 
-    8. Done! Oh no, wait, there's a GIF as well! :)
-    ![](docs/tutorial_spaces.gif?raw=true)
+    8. Done! Oh no, wait, there's that GIF! :)
+
+        ![](docs/tutorial_spaces.gif?raw=true)
