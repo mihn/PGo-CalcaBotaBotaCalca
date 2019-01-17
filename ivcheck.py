@@ -124,7 +124,7 @@ class Main:
             if "appraise" in actions:
                 await self.tap("pokemon_menu_button")
                 await self.tap("appraise_button")
-                await self.p.send_intent("tesmath.calcy.ACTION_ANALYZE_SCREEN", "tesmath.calcy/.IntentReceiver", [["silentMode", True]])
+                await self.p.send_intent("tesmath.calcy.ACTION_ANALYZE_SCREEN", "tesmath.calcy/.IntentReceiver", [["silentMode", True], ["--user", self.args.user]])
                 for _ in range(0, 4):  # we can do it four times before beggining to screencap
                     await self.tap("continue_appraisal")
                 while await self.check_appraising():
