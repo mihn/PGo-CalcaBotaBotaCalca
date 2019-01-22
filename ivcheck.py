@@ -1,14 +1,16 @@
-from pokemonlib import PokemonGo
-import yaml
-import asyncio
-import re
+#!/usr/bin/env python3.7
 import argparse
+import asyncio
 import logging
 import operator
-import unicodedata
 import os.path
+import re
 from sys import platform
+
+import yaml
 from colorlog import ColoredFormatter
+
+from pokemonlib import PokemonGo
 
 
 def in_func(a, b):
@@ -219,7 +221,6 @@ class Main:
     async def get_data_from_clipboard(self):
         clipboard = await self.p.get_clipboard()
         logger.debug('Device clipboard is: ' + clipboard)
-        logger.debug('Normalized clipboard is: ' + unicodedata.normalize('NFKD', clipboard))
 
         calcy, data = clipboard.split('\u2003'*NAME_MAX_LEN)
         data = data.split(',')
