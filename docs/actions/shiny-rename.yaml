@@ -1,4 +1,5 @@
-# For this, search for "shiny" and run
+# For this, search for "shiny" and run.
+# For best results set calcy as: $NameShort$$IV_AVG$, the script takes care of the leading symbols
 
 actions:
     # Nobrainer:
@@ -26,53 +27,19 @@ actions:
     - conditions:
         iv__eq: 100
       actions:
-        rename: "¡{calcy}"
-
-    # If any of these pokemons has an IV greater or equal than 80, rename like that:
-    - conditions:
-        name__in:
-          - Mewtwo
-          - Deoxys Normal
-          - Deoxys Attack
-          - Deoxys Defense
-          - Deoxys Speed
-          - Giratina Altered
-          - Articuno
-          - Zapdos
-          - Moltres
-          - Raikou
-          - Gengar
-          - Entei
-          - Suicune
-          - Ho-Oh
-          - Lugia
-          - Regirock
-          - Regice
-          - Registeel
-          - Latias
-          - Latios
-          - Kyogre
-          - Groudon
-          - Rayquaza
-          - Absol
-          - Cresselia
-          - Marowak Alolan
-          - Heltran
-        iv_max__ge: 80
-      actions:
-        rename: "›{calcy}"
+        rename: "¡ {calcy}"
 
     # Otherwise, pokemons with IV greater than 80 (that aren't the ones below) get renamed as follow:
     - conditions:
         iv_max__ge: 80
       actions:
-        rename: "+{calcy}"
+        rename: "+ {calcy}"
 
     # Every other shiny that's IV 79 or less gets renamed like so:
     - conditions:
         iv_max__lt: 80
       actions:
-        rename: "±{calcy}"
+        rename: "± {calcy}"
 
     # Renames anything else that doesn't matches any rule above, which shouldn't happen.
     #   The script should never get here, but this is good practice: if you find a pomemon
