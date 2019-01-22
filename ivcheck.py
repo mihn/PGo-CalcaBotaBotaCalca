@@ -41,6 +41,58 @@ RE_RED_BAR = re.compile(r"^.+\(\s*\d+\): Screenshot #\d has red error box at the
 RE_SUCCESS = re.compile(r"^.+\(\s*\d+\): calculateScanOutputData finished after \d+ms$")
 RE_SCAN_INVALID = re.compile(r"^.+\(\s*\d+\): Scan invalid$")
 
+NAME_MAX_LEN = 120
+
+NUMBER_SETS = [
+    [chr(9450)] + [chr(i) for i in range(9312, 9332)] + [chr(i) for i in range(12881, 12896)] + [chr(i) for i in range(12977, 12992)],
+    [chr(9471)] + [chr(i) for i in range(10102, 10112)] + [chr(i) for i in range(9451, 9461)]
+]
+
+CALCY_STRING = '\u2003'*NAME_MAX_LEN + '$CatchDate$,$Lucky$,$ATT$,$DEF$,$HP$,$Gender$,$Trade$,$IV%Min$,$IV%Max$,$AttIV$,$DefIV$,$HpIV$,$FaMove$,$SpMove$,$Appraised$,$Legacy$'
+
+def gender_filter(c):
+    if c == '♂':
+        return 'M'
+    elif c == '♀':
+        return 'F'
+    return 'U'
+
+def int_filter(c):
+    try:
+        return int(c)
+    except ValueError:
+        pass
+    for number_set in NUMBER_SETS:
+        try:
+            return number_set.index(c)
+        except ValueError:
+            pass
+    raise ValueError('Unrecognised number format %s', c)
+
+def bool_filter(c):
+    if c:
+        return True
+    return False
+
+CALCY_VARIABLES = [
+    ['catch_year', int_filter],
+    ['lucky', bool_filter],
+    ['attack', int_filter],
+    ['defense', int_filter],
+    ['hp', int_filter],
+    ['gender', gender_filter],
+    ['trade', bool_filter],
+    ['iv_min', int_filter],
+    ['iv_max', int_filter],
+    ['attack_iv', int_filter],
+    ['defense_iv', int_filter],
+    ['hp_iv', int_filter],
+    ['fast_move', None],
+    ['charge_move', None],
+    ['appraised', bool_filter],
+    ['legacy', bool_filter],
+]
+
 CALCY_SUCCESS = 0
 CALCY_RED_BAR = 1
 CALCY_SCAN_INVALID = 2
@@ -86,6 +138,9 @@ class Main:
             await self.p.get_device()
         else:
             await self.p.set_device(self.args.device_id)
+        if args.copy_calcy:
+            await self.p.send_intent("clipper.set", extra_values=[["text", CALCY_STRING]])
+            return
 
         path = "config.yaml"
         device_path = await self.p.get_device()+".yaml"
@@ -96,8 +151,6 @@ class Main:
 
         with open(path, "r") as f:
             self.config = yaml.load(f, Loader)
-            # print(path, self.config)
-        self.iv_regexes = [re.compile(r) for r in self.config["iv_regexes"]]
         await self.p.start_logcat()
         count = 0
         num_errors = 0
@@ -168,27 +221,19 @@ class Main:
         logger.debug('Device clipboard is: ' + clipboard)
         logger.debug('Normalized clipboard is: ' + unicodedata.normalize('NFKD', clipboard))
 
-        for iv_regex in self.iv_regexes:
-            # unicodedata replaces unicode characters like '¹' (u'\xb9')
-            # with their normalized counterpart, e.g.:     '1' (u'1')
-            # Works with most (if not all) of CalcyIV's numeric schemes.
-            match = iv_regex.match(unicodedata.normalize('NFKD', clipboard))
-            if match:
-                # logger.debug('Clipboard matched against ' + str(iv_regex))
-                d = match.groupdict()
-                if "iv" in d:
-                    d["iv"] = float(d["iv"])
-                    d["iv_avg"] = int(d["iv"])
-                    d["iv_min"] = d["iv"]
-                    d["iv_max"] = d["iv"]
-                else:
-                    for key in ["iv_min", "iv_max"]:
-                        if key in d:
-                            d[key] = float(d[key])
-                    d["iv_avg"] = int((d['iv_max'] + d['iv_min']) / 2)  # funnyly averages iv_max and iv_min into an integer
-                    d["iv"] = None
-                return clipboard, d
+        calcy, data = clipboard.split('\u2003'*NAME_MAX_LEN)
+        data = data.split(',')
+        values = {}
+        for i, item in enumerate(CALCY_VARIABLES):
+            name, function = item
+            if function is None:
+                values[name] = data[i]
+            else:
+                values[name] = function(data[i])
+        values['iv_avg'] = (values['iv_min'] + values['iv_max']) / 2
+        values['iv'] = values['iv_min'] if values['iv_min'] == values['iv_max'] else None
 
+        return calcy, values
 
     async def check_appraising(self):
         """
@@ -254,11 +299,6 @@ class Main:
         return color_count > 500
 
     async def get_actions(self, values):
-        valid_conditions = [
-            "name", "iv", "iv_min", "iv_max", "success", "blacklist",
-            "appraised", "id", "cp", "max_hp", "dust_cost", "level",
-            "fast_move", "special_move", "gender", "catch_year"
-        ]
         for ruleset in self.config["actions"]:
             conditions = ruleset.get("conditions", {})
             # Check if we need to read the clipboard
@@ -277,8 +317,6 @@ class Main:
                         except ValueError:
                             pass
 
-                if key not in valid_conditions:
-                    raise Exception("Unknown Condition {}".format(key))
                 if key not in values:
                     passed = False
                     break
@@ -294,8 +332,6 @@ class Main:
                     break
             if passed:
                 logger.warning('Condition matched against ' + str(ruleset.get("conditions", {})))
-                # print("MATCHED", ruleset)
-                # print(values)
                 return ruleset.get("actions", {})
         return {}
 
@@ -344,23 +380,25 @@ if __name__ == '__main__':
         asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
     parser = argparse.ArgumentParser(description='Pokemon go renamer')
     parser.add_argument('--device-id', type=str, default=None,
-                        help="Optional, if not specified the phone is automatically detected. Useful only if you have multiple phones connected. Use adb devices to get a list of ids.")
+                        help='Optional, if not specified the phone is automatically detected. Useful only if you have multiple phones connected. Use adb devices to get a list of ids.')
     parser.add_argument('--max-retries', type=int, default=5,
-                        help="Maximum retries, set to 0 for unlimited.")
+                        help='Maximum retries, set to 0 for unlimited.')
     parser.add_argument('--config', type=str, default=None,
-                        help="Config file location.")
+                        help='Config file location.')
     parser.add_argument('--touch-paste', default=False, action='store_true',
-                        help="Use touch instead of keyevent for paste.")
+                        help='Use touch instead of keyevent for paste.')
     parser.add_argument('--user', type=int, default=0,
-                        help="Use a cloned CalcyIV from a different phone user. Useful for sandboxing apps like Island, where you could run two instances simultaneously.")
+                        help='Use a cloned CalcyIV from a different phone user. Useful for sandboxing apps like Island, where you could run two instances simultaneously.')
     parser.add_argument('--pid-name', default=None, type=str,
-                        help="Create pid file")
+                        help='Create pid file')
     parser.add_argument('--pid-dir', default=None, type=str,
-                        help="Change default pid directory")
-    parser.add_argument('--verbose', '-v', default=False, action='store_true',
-                        help="Enables dumping of the device's logcat. Spams quite a lot.")
+                        help='Change default pid directory')
     parser.add_argument('--stop-after', default=None, type=int,
-                            help="Stop after X pokemon")
+                        help='Stop after X pokemon')
+    parser.add_argument('--copy-calcy', default=False, action='store_true',
+                        help='Copy calcy IV renaming string')
+    parser.add_argument('--verbose', '-v', default=False, action='store_true',
+                        help='Enables dumping of the device logcat. Spams quite a lot.')
     args = parser.parse_args()
     if args.pid_name is not None:
         from pid import PidFile
