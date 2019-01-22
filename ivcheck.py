@@ -43,7 +43,7 @@ RE_RED_BAR = re.compile(r"^.+\(\s*\d+\): Screenshot #\d has red error box at the
 RE_SUCCESS = re.compile(r"^.+\(\s*\d+\): calculateScanOutputData finished after \d+ms$")
 RE_SCAN_INVALID = re.compile(r"^.+\(\s*\d+\): Scan invalid$")
 
-NAME_MAX_LEN = 120
+NAME_MAX_LEN = 12
 
 NUMBER_SETS = [
     [chr(9450)] + [chr(i) for i in range(9312, 9332)] + [chr(i) for i in range(12881, 12896)] + [chr(i) for i in range(12977, 12992)],
