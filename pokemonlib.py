@@ -6,7 +6,6 @@ import subprocess
 import re
 from colorlog import ColoredFormatter
 
-
 logger = logging.getLogger('PokemonGo')
 logger.setLevel(logging.INFO)
 ch = logging.StreamHandler()
@@ -18,19 +17,15 @@ logger.addHandler(ch)
 RE_CLIPBOARD_TEXT = re.compile(r"^./ClipboardReceiver\(\s*\d+\): Clipboard text: (.+)$")
 
 class CalcyIVError(Exception):
-    # logger.error('CalcyIV did not find any combinations.')
     pass
 
 class RedBarError(Exception):
-    # logger.error('The red bar is covering the pokémon CP.')
     pass
 
 class PhoneNotConnectedError(Exception):
-    # logger.error('Your phone does not appear to be connected. Try \'adb devices\' and see if it is listed there :)')
     pass
 
 class LogcatNotRunningError(Exception):
-    # logger.error('For some reason, I can\'t run the logcat on your phone! :( Try to run \'adb logcat\' and see if something happens. Message the developers as well!')
     pass
 
 class PokemonGo(object):
@@ -81,9 +76,9 @@ class PokemonGo(object):
         return devices
 
     async def start_logcat(self):
-        # return_code, stdout, stderr = await self.run(["adb", "-s", await self.get_device(), "shell", "pidof", "-s", "tesmath.calcy"])
-        # logger.info("Running pidof calcy got code %d: %s", return_code, stdout)
-        # self.calcy_pid = stdout.decode('utf-8').strip()
+        #return_code, stdout, stderr = await self.run(["adb", "-s", await self.get_device(), "shell", "pidof", "-s", "tesmath.calcy"])
+        #logger.debug("Running pidof calcy got code %d: %s", return_code, stdout)
+        #self.calcy_pid = stdout.decode('utf-8').strip()
         # cmd = ["adb", "-s", await self.get_device(), "logcat", "-T", "1", "-v", "brief", "--pid", self.calcy_pid]
         cmd = ["adb", "-s", await self.get_device(), "logcat", "-T", "1", "-v", "brief"]
         logger.info("Starting logcat %s", cmd)
@@ -93,14 +88,6 @@ class PokemonGo(object):
             stderr=asyncio.subprocess.PIPE,
         )
         await self.logcat_task.stdout.readline() # Read and discard the one line as -T 0 doesn't work
-
-    async def seek_to_end(self):
-        # Seek to the end of the file
-        while True:
-            try:
-                task = await asyncio.wait_for(self.logcat_task.stdout.readline(), 0.2)
-            except asyncio.TimeoutError:
-                break
 
     async def read_logcat(self):
         if self.logcat_task.returncode != None:

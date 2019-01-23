@@ -168,7 +168,7 @@ class Main:
             blacklist = False
             state, values = await self.check_pokemon()
 
-            if "name" in values and values["name"] in self.config["blacklist"]:
+            if values["name"] in self.config["blacklist"]:
                 blacklist = True
             elif state == CALCY_SUCCESS:
                 num_errors = 0
@@ -200,7 +200,7 @@ class Main:
                 actions = await self.get_actions(values)
                 await self.tap("dismiss_calcy")
 
-            if "rename" in actions or "rename-calcy" in actions or "rename-prefix" in actions:
+            if "rename" in actions or "rename-calcy" in actions:
                 if values["success"] is False:
                     await self.tap('close_calcy_dialog')  # it gets in the way
                 await self.tap('rename')
