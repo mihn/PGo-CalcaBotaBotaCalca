@@ -47,6 +47,7 @@ _For Gboard users, the character in parenthesis indicates which key on Gboard co
 - `↓` _(Inside key `^`)_
 - `←` _(Inside key `^`)_
 - `⇆` _(Double Arrow. Not available on Gboard)_
+- `μ` _(Inside key `π`)_ [B]
 - `·` _(Inside key `-`)_
 - `†` _(Inside key `*`)_
 - `‡` _(Inside key `*`)_
@@ -58,10 +59,19 @@ _For Gboard users, the character in parenthesis indicates which key on Gboard co
 - `♥` _(Inside key `•`)_
 - `♦` _(Inside key `•`)_
 - `✓`
-- `∞` _(Inside key `=`)_
+- `€`
+- `∞` _(Inside key `=`)_ [B]
 - Numbers
+- `∞` _(Inside key `=`)_ [A]
 - Letters
-- `μ` _(Inside key `π`)_
+- `μ` _(Inside key `π`)_ [A]
 - `Π` _(Inside key `π`)_
 - `π`
 - `Ω` _(Inside key `π`)_
+
+
+### Per device differences
+
+**Characters above with `[A]` or similar at the end means that the order changes depending on the device. Yeah...**
+
+The letter between the brackets is the device's "type" _(more like mood)_, so if your phone follows pattern [A], you should disregard characters labeled as [B]. In other words, it's either one, or the other.
