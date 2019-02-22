@@ -272,7 +272,9 @@ class Main:
     async def check_favorite(self):
         """
         Not the best check, just search the area
-        for pixels that are the right color
+        for pixels that are the right color and
+        returns True if more than 70% of the total
+        ammount of pixels match it.
         """
         screencap = await self.p.screencap()
         crop = screencap.crop(self.config['locations']['favorite_button_box'])
@@ -305,12 +307,16 @@ class Main:
             (245, 192, 13),
         ]
         color_count = 0
+        other_count = 0
         for x in range(1, width):
             for y in range(1, height):
                 c = rgb_im.getpixel((x, y))
                 if c in colors:
                     color_count += 1
-        return color_count > 500
+                else:
+                    other_count += 1
+        logger.debug('Found ' + str(color_count) + ' yellow pixels from a total of ' + str(color_count + other_count) + ' pixels.')
+        return color_count / (color_count + other_count) > 0.7
 
     async def get_actions(self, values):
         for ruleset in self.config["actions"]:
