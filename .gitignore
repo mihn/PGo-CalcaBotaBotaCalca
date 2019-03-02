@@ -104,4 +104,5 @@ ENV/
 .vscode/
 
 
-config*.yaml
+config.yaml
+config/
