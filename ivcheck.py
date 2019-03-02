@@ -170,6 +170,7 @@ class Main:
             blacklist = False
             state, values = await self.check_pokemon()
 
+            logger.debug('Current state is %s', state)
 
             if values and values["name"] in self.config["blacklist"]:
                 blacklist = True
@@ -190,12 +191,20 @@ class Main:
             elif state == CALCY_SCAN_INVALID:
                 num_errors += 1
                 if num_errors < args.max_retries:
+                    await asyncio.sleep(0.1)  # waits a bit between each scan, otherwise goes too fast
+                                        # sometimes the pokemon takes around a second to make the arc-level visible
                     continue
                 num_errors = 0
 
             values["success"] = True if state == CALCY_SUCCESS and blacklist is False else False
             values["blacklist"] = blacklist
             values["appraised"] = False
+
+            try:
+                logger.debug('values["success"] is %s', values["success"])
+            except KeyError:
+                pass
+
             actions = await self.get_actions(values)
             if "appraise" in actions:
                 await self.tap("pokemon_menu_button")
@@ -231,6 +240,7 @@ class Main:
                 await self.tap('rename_ok')
             if "favorite" in actions:
                 if not await self.check_favorite():
+                    logger.info('Favoriting pokemon...')
                     await self.tap('favorite_button')
             count += 1
             if args.stop_after is not None and count >= args.stop_after:
