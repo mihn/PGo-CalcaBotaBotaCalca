@@ -160,8 +160,8 @@ class Main:
         await self.p.start_logcat()
 
     async def start(self):
-        if await self.setup() == False:
-             return
+        if await self.setup() is False:
+            return
         count = 0
         num_errors = 0
         while True:
@@ -228,7 +228,7 @@ class Main:
 
     async def get_data_from_clipboard(self):
         clipboard = await self.p.get_clipboard()
-        logger.debug('Device clipboard is: ' + clipboard)
+        logger.debug('Device clipboard is: %s', clipboard)
 
         try:
             calcy, data = clipboard.split('\u2003'*NAME_MAX_LEN)
@@ -363,6 +363,7 @@ class Main:
             line = await self.p.read_logcat()
             if args.verbose:
                 logger.debug("logcat line received: %s", line)
+
             match = RE_CALCY_IV.match(line)
             if match:
                 values = match.groupdict()
@@ -370,6 +371,7 @@ class Main:
                 if values['cp'] == '-1' or values['level'] == '-1.0':
                     pass
                 elif red_bar is True:
+                    logger.error("RE_CALCY_IV matched and red_bar is True")
                     state = CALCY_RED_BAR
                     return state, values
                 else:
@@ -380,18 +382,17 @@ class Main:
                     return state, values
 
             match = RE_RED_BAR.match(line)
-
             if match:
-                logger.debug("RE_RED_BAR matched")
+                logger.error("RE_RED_BAR matched")
                 red_bar = True
 
             match = RE_SCAN_INVALID.match(line)
             if match:
                 if red_bar:
-                    logger.debug("RE_SCAN_INVALID matched and red_bar is True")
+                    logger.error("RE_SCAN_INVALID matched and red_bar is True")
                     return CALCY_RED_BAR, values
                 else:
-                    logger.debug("RE_SCAN_INVALID matched, raising CalcyIVError")
+                    logger.error("RE_SCAN_INVALID matched, raising CalcyIVError")
                     return CALCY_SCAN_INVALID, values
 
 
