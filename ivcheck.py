@@ -42,6 +42,7 @@ RE_CALCY_IV = re.compile(r"^./MainService\(\s*\d+\): Received values: Id: \d+ \(
 RE_RED_BAR = re.compile(r"^.+\(\s*\d+\): Screenshot #\d has red error box at the top of the screen$")
 RE_SUCCESS = re.compile(r"^.+\(\s*\d+\): calculateScanOutputData finished after \d+ms$")
 RE_SCAN_INVALID = re.compile(r"^.+\(\s*\d+\): Scan invalid.+$")
+RE_SCAN_TOO_SOON = re.compile(r"^.+\(\s*\d+\): Detected power-up screen$")
 
 NAME_MAX_LEN = 12
 
@@ -102,6 +103,7 @@ CALCY_VARIABLES = [
 CALCY_SUCCESS = 0
 CALCY_RED_BAR = 1
 CALCY_SCAN_INVALID = 2
+CALCY_SCAN_TOO_SOON = 3
 
 class Loader(yaml.SafeLoader):
     def __init__(self, stream):
@@ -172,7 +174,7 @@ class Main:
                 blacklist = True
             elif state == CALCY_SUCCESS:
                 num_errors = 0
-            elif state == CALCY_RED_BAR:
+            elif state in [CALCY_RED_BAR, CALCY_SCAN_TOO_SOON]:
                 continue
             elif state == CALCY_SCAN_INVALID:
                 num_errors += 1
@@ -360,6 +362,7 @@ class Main:
         red_bar = False
         values = {}
         while True:
+            # TODO: This block's logic is not trivial, maybe a refactoring would help
             line = await self.p.read_logcat()
             if args.verbose:
                 logger.debug("logcat line received: %s", line)
@@ -394,6 +397,11 @@ class Main:
                 else:
                     logger.error("RE_SCAN_INVALID matched, raising CalcyIVError")
                     return CALCY_SCAN_INVALID, values
+
+            match = RE_SCAN_TOO_SOON.match(line)
+            if match:
+                logger.error("RE_SCAN_TOO_SOON matched, so probably .")
+                return CALCY_SCAN_TOO_SOON, values
 
 
 if __name__ == '__main__':
