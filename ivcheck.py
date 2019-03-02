@@ -429,7 +429,6 @@ class Main:
                 if red_bar:
                     logger.error("RE_SCAN_INVALID matched and red_bar is True")
                     return CALCY_RED_BAR, values
-
                 logger.error("RE_SCAN_INVALID matched, raising CalcyIVError")
                 return CALCY_SCAN_INVALID, values
 
@@ -437,11 +436,6 @@ class Main:
             if match:
                 values = None
                 logger.error("RE_SCAN_TOO_SOON matched, we're probably going too fast. If you get this error often, try raising 'waits -> rename_ok' in config.yaml")
-                return CALCY_SCAN_TOO_SOON, values
-
-            match = RE_SCAN_TOO_SOON.match(line)
-            if match:
-                logger.error("RE_SCAN_TOO_SOON matched, so probably .")
                 return CALCY_SCAN_TOO_SOON, values
 
 
