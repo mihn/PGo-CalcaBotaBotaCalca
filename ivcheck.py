@@ -34,7 +34,7 @@ logger = logging.getLogger('ivcheck')
 logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
-formatter = ColoredFormatter("  %(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s")
+formatter = ColoredFormatter("%(log_color)s%(asctime)s %(log_color)s%(name)-12s %(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s", datefmt='%I:%M:%S %p')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
@@ -53,7 +53,7 @@ NUMBER_SETS = [
     [chr(i) for i in range(8320, 8329)]  # subscripted digits: "₁"
 ]
 
-CALCY_STRING = '\u2003'*NAME_MAX_LEN + '$CatchDate$,$Lucky$,$ATT$,$DEF$,$HP$,$Gender$,$Trade$,$IV%Min$,$IV%Max$,$AttIV$,$DefIV$,$HpIV$,$FaMove$,$SpMove$,$Appraised$,$Legacy$'
+CALCY_STRING = '\xa0'*NAME_MAX_LEN + '$CatchDate$|$Lucky$|$ATT$|$DEF$|$HP$|$Gender$|$Trade$|$IV%Min$|$IV%Max$|$AttIV$|$DefIV$|$HpIV$|$FaMove$|$SpMove$|$Appraised$|$Legacy$'
 
 def gender_filter(c):
     if c == chr(9794):
@@ -176,7 +176,7 @@ class Main:
                 blacklist = True
             elif state == CALCY_SUCCESS:
                 num_errors = 0
-            elif state in CALCY_RED_BAR:
+            elif state == CALCY_RED_BAR:
                 continue
             elif state == CALCY_SCAN_TOO_SOON:
                 num_errors += 1  # uses the same variable as CALCY_SCAN_INVALID, as they'll never happen simultaneously
@@ -254,12 +254,12 @@ class Main:
         logger.debug('Device clipboard is: %s', clipboard)
 
         try:
-            calcy, data = clipboard.split('\u2003'*NAME_MAX_LEN)
+            calcy, data = clipboard.split('\xa0'*NAME_MAX_LEN)
         except ValueError:
             logger.error('Received clipboard data that does not contain 12 non-breaking spaces, did you run --copy-calcy and paste onto the end of your calcy rename settings? Clipboard data follows')
             logger.error(repr(clipboard))
             raise
-        data = data.split(',')
+        data = data.split('|')
         values = {}
         for i, item in enumerate(CALCY_VARIABLES):
             name, function = item
