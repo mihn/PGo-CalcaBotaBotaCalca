@@ -53,11 +53,13 @@ _For Gboard users, the character in parenthesis indicates which key on Gboard co
 - `‡` _(Inside key `*`)_
 - `•`_
 - `‰`
+- `☀️` _(It's a sun emoji)_
 - `★` _(Inside key `*`)_
 - `♠` _(Inside key `•`)_
 - `♣` _(Inside key `•`)_
 - `♥` _(Inside key `•`)_
 - `♦` _(Inside key `•`)_
+- `✂️` (Emoji)
 - `✓`
 - `€`
 - `∞` _(Inside key `=`)_ [B]
