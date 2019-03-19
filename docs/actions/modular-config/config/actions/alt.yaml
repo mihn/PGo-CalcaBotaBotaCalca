@@ -82,7 +82,7 @@
     rename: "•{calcy}"
 ## Bad ones, for eventual trade (just like the legacies above)
 - conditions:
-    iv_max__ge: 90
+    iv_max__lt: 90
     name__in: !include ../pokemons/legendaries.yaml
   actions:
     rename: "+{calcy}"
