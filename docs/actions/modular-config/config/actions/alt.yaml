@@ -1,0 +1,187 @@
+##########
+## FAIL ##
+##########
+- conditions:
+    success: false
+  actions:
+    rename: "!Failed"
+
+
+# Luckies are non tradable
+# run trade.yaml on these afterwards
+- conditions:
+    lucky: true
+  actions:
+    appraise:
+    rename: "∅{calcy}"
+
+##############
+## LEGACIES ##
+##############
+# Appraises legacies
+- conditions:
+    legacy: true
+    appraised: false
+  actions:
+    appraise:
+# Good legacy + legendary, prolly going to get used by alt
+- conditions:
+    legacy: true
+    iv_max__ge: 90
+    level__ge: 30
+    name__in: !include ../pokemons/legendaries.yaml
+  actions:
+    favorite:
+    rename: "•{calcy}"
+# Rest of legacy + legendary, prolly going to get traded anytime
+- conditions:
+    legacy: true
+    name__in: !include ../pokemons/legendaries.yaml
+  actions:
+    favorite:
+    rename: "+{calcy}"
+# Rest of legacies non legendary, prolly going to get traded as well
+- conditions:
+    legacy: true
+  actions:
+    favorite:
+    rename: '+{calcy}' # legacies non legandaries
+
+
+
+## Renames unowns to be renamed afterwards with emi_unowns.yaml
+## We would trade them but not automatically, they can be worth
+## a penny or so.
+- conditions:
+    name__in:
+      - Unown
+  actions:
+    rename: "* The {iv_avg}"
+
+
+## Babies go to main, I don't care about babies on alt, waste of space
+- conditions:
+    name__in: !include ../pokemons/babies.yaml
+  actions:
+    rename: "π TRADE {iv_avg}"
+
+
+## Renames random rare & bizarre stuff and those "one-time only"
+## pokémons to be renamed afterwards with emi_prettify.yaml
+- conditions:
+    name__in: !include ../pokemons/rares.yaml
+  actions:
+    rename: "μ TRADE RARE"
+
+
+## Good legendaries stay at alt
+- conditions:
+    iv_max__ge: 90
+    name__in: !include ../pokemons/legendaries.yaml
+  actions:
+    rename: "•{calcy}"
+## Bad ones, for eventual trade (just like the legacies above)
+- conditions:
+    iv_max__ge: 90
+    name__in: !include ../pokemons/legendaries.yaml
+  actions:
+    rename: "+{calcy}"
+
+
+##############
+### HUNDOS ###
+##############
+# Check possible IV100
+- conditions:
+    iv:
+    iv_max__ge: 100
+    appraised: false
+  actions:
+    appraise:
+# Guaranteed hundos get renamed normally
+- conditions:
+    iv__eq: 100
+  actions:
+    rename: "{calcy}"
+
+
+#####################
+### META RELEVANT ###
+#####################
+# Good metas are the only ones we keep for alt to use.
+- conditions:
+    iv_max__ge: 90
+    level__ge: 30
+    name__in: !include ../pokemons/metarelevant.yaml
+  actions:
+    appraise:
+    rename: "{calcy}"
+# Rest we trade
+- conditions:
+    name__in: !include ../pokemons/metarelevant.yaml
+  actions:
+    rename: "μ{level} TRADE {iv}"
+
+
+##############
+### TRADES ###
+##############
+## We can also trade anything high level or hich CP, maybe we get Lucky (ha)
+## For alt, these are π, i.e.: we don't really care so we can automatic trade
+## though for main, these are μ, which means they're actually better be checked
+## before trading, or trade exclusively with other μ pokes
+- conditions:
+    level__ge: 30
+    lucky: false
+  actions:
+    rename: "π{level} TRADE"
+- conditions:
+    cp__ge: 2000
+    lucky: false
+  actions:
+    rename: "π{level} TRADE"
+
+## PVP is not yet sorted out
+# - conditions:
+#     name__in: !include ../pokemons/pvp.yaml
+#   actions:
+#     rename: "†{level} TRADE"
+
+####################
+### EVOLVE POKES ###
+####################
+- conditions:
+    name__in: !include ../pokemons/evolve.yaml
+  actions:
+    rename: "Ω TRADEVO"
+# Renames the rest of pokemons to trade for candies
+- conditions:
+    name__in: !include ../pokemons/trade_candy.yaml
+  actions:
+    rename: "π TRADE"
+
+
+
+###########################
+### FOR MANUAL CHECKING ###
+###########################
+- conditions:
+    iv_max__ge: 95
+  actions:
+    rename: "!{calcy}"
+
+
+#######################
+### SKIPS AND TRASH ###
+#######################
+# Everything else below IV95 we're skipping (that's why there's no
+# action: block in here.
+- conditions:
+    iv_max__lt: 95
+
+# This renames anything else that doesn't match any rule above
+# which, in theory, shouldn't happen. So if you see a pokemon with
+# this character you know you have a mistake on this file and most
+# likely missed something.
+- actions:
+    rename: "¿ {calcy}"

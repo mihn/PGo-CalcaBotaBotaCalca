@@ -1,0 +1,16 @@
+## Locations for Xiaomi Redmi Note 5 1080x2400 with density override 408
+# Use a nonevolved non-lucky poke (with three buttons) to calibrate calcy
+# Check that it's working properly and it grabs the moves on lucky evolved pokemons
+
+rename: [540, 920]
+next: [1000, 500]
+rename_ok: [550, 1290]
+close_calcy_dialog: [900, 1740]       # needs fix
+favorite_button: [970, 185]
+favorite_button_box: [910, 155, 945, 185]   # manually fixed for 1080x2400! :)
+pokemon_menu_button: [930, 2240]
+appraise_button: [930, 1865]
+continue_appraisal: [540, 1400]
+calcy_appraisal_save_button: [890, 865]
+dismiss_calcy: [540, 1400]
+appraisal_box: [110, 1950, 970, 2100]       # manually fixed for 1080x2400! :)

@@ -1,0 +1,112 @@
+## Search for "traded" after a trading session and run this only on these pokemons.
+# This hits harder than the default yaml, as the pokemons were already traded and now are basically
+# useless if their IVs are low, no matter if it's a legendary or a magikarp.
+
+
+# Failed scans
+- conditions:
+    success: false
+  actions:
+    rename: "!Failed"
+
+# Legacies, adds ! to manually add to correct category
+# afterwards
+- conditions:
+    legacy: true
+  actions:
+    favorite:
+    rename: "!{calcy}"
+
+
+#############
+## LUCKIES ##
+#############
+## Not all luckies are worth it...
+
+# Appraise every lucky before taking further actions plz
+- conditions:
+    iv:
+    lucky: true
+    appraised: false
+  actions:
+    appraise:
+
+# If the IV is good then great..
+- conditions:
+    lucky: true
+    iv_max__ge: 90
+  actions:
+    rename: "{calcy}"
+
+# If the IV is bad, but the level is highish, at
+# least we can max it out cheaply, so it's ok as well.
+- conditions:
+    lucky: true
+    level__ge: 30
+  actions:
+    rename: "{calcy}"
+
+# Otherwise, I'd keep only bad luckies that are legendaries
+- conditions:
+    lucky: true
+    name__in: !include ../pokemons/legendaries.yaml
+  actions:
+    rename: "{calcy}"
+
+# Also traded Legendary/ExRaid/Mythical, IV 90 or higher only,
+# while not lucky, are useful, so adds the same prefix as default.yaml
+- conditions:
+    name__in: !include ../pokemons/legendaries.yaml
+    iv_max__gt: 90
+  actions:
+    rename: "•{calcy}"
+
+
+# Good babies, wyanaut? (ha)
+- conditions:
+    iv_max__gt: 90
+    name__in: !include ../pokemons/babies.yaml
+  actions:
+    rename: "*{iv_avg}{name}"
+
+# And rares ofc, regardless of IV
+- conditions:
+    name__in: !include ../pokemons/rares.yaml
+  actions:
+    rename: "*{iv_avg}{name}"
+
+##############
+### HUNDOS ###
+##############
+# Possible IV100 get renamed for later verification
+- conditions:
+    iv:
+    iv_max__eq: 100
+    appraised: false
+  actions:
+    appraise:
+
+# Guaranteed hundos get renamed normally, though
+# they probably are lucky and got renamed on one of the
+# conditions below. Better be safe than sorry.
+- conditions:
+    iv__eq: 100
+  actions:
+    rename: "{calcy}"
+
+
+#############
+### TRASH ###
+#############
+# We can give a chance for meta-relevants with high level, I mean...
+# a traded LVL36 Dragonite with IV > 80 is useful, sorta
+- conditions:
+    iv_max__ge: 90
+    name__in: ../pokemons/legendaries.yaml
+  actions:
+    rename: "!{calcy}"
+
+
+## Everything else is *definitely* trash
+- actions:
+    rename: "%% TRASH %%"
