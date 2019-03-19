@@ -210,7 +210,7 @@ class Main:
 
             values["success"] = True if state == CALCY_SUCCESS and blacklist is False else False
             values["blacklist"] = blacklist
-            values["appraised"] = False
+            values["appraised"] = True if values["appraised"] is True else False
 
             try:
                 logger.debug('values["success"] is %s', values["success"])
