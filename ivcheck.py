@@ -34,7 +34,7 @@ logger = logging.getLogger('ivcheck')
 logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
-formatter = ColoredFormatter("%(log_color)s%(asctime)s %(log_color)s%(name)-12s %(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s", datefmt='%I:%M:%S %p')
+formatter = ColoredFormatter('%(log_color)s[%(asctime)s] %(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s', datefmt='%I:%M:%S %p')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
@@ -150,6 +150,7 @@ class Main:
             duration
         )
         if location in self.config['waits']:
+            logger.info('Waiting ' + str(self.config['waits'][location]) + ' seconds after ' + str(self.config['locations'][location]) + '...')
             await asyncio.sleep(self.config['waits'][location])
 
     async def setup(self):
@@ -182,8 +183,6 @@ class Main:
             blacklist = False
             state, values = await self.check_pokemon()
 
-            logger.debug('Current state is %s', state)
-
             if values and values["name"] in self.config["blacklist"]:
                 blacklist = True
             elif state == CALCY_SUCCESS:
@@ -212,12 +211,8 @@ class Main:
             values["blacklist"] = blacklist
             values["appraised"] = True if values["appraised"] is True else False
 
-            try:
-                logger.debug('values["success"] is %s', values["success"])
-            except KeyError:
-                pass
-
             actions = await self.get_actions(values)
+
             if "appraise" in actions:
                 await self.tap("pokemon_menu_button")
                 await self.tap("appraise_button")
@@ -237,10 +232,12 @@ class Main:
             if "get_moves" in actions:
                 # If calcyiv already has both moves, then skip this action
                 if values['fast_move'] == '' or values['charge_move'] == '' or values['fast_move'] == 'err' or values['charge_move'] == 'err':
+                    logger.warning("Scrolling down...")
                     await self.swipe('scroll_to_moves', 500)
                     moves_state, moves_values = await self.check_pokemon()
                     if 'calcy' in moves_values:
                         values['calcy'] = moves_values['calcy']
+                    logger.warning("Scrolling up again...")
                     await self.swipe('scroll_to_top', 500)
 
             if "rename" in actions or "rename-calcy" in actions:
@@ -258,6 +255,7 @@ class Main:
                 await self.p.key('KEYCODE_TAB')
                 await self.p.key('KEYCODE_ENTER')
                 await self.tap('rename_ok')
+
             if "favorite" in actions:
                 if not await self.check_favorite():
                     logger.info('Favoriting pokemon...')
@@ -405,7 +403,7 @@ class Main:
                     passed = False
                     break
             if passed:
-                logger.warning('Condition matched against ' + str(ruleset.get("conditions", {})))
+                logger.debug('Condition matched against ' + str(ruleset.get("conditions", {})))
                 return ruleset.get("actions", {})
         return {}
 

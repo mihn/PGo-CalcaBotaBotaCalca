@@ -10,7 +10,7 @@ logger = logging.getLogger('PokemonGo')
 logger.setLevel(logging.INFO)
 ch = logging.StreamHandler()
 ch.setLevel(logging.INFO)
-formatter = ColoredFormatter("  %(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s")
+formatter = ColoredFormatter('%(log_color)s[%(asctime)s] %(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s', datefmt='%I:%M:%S %p')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
@@ -60,7 +60,7 @@ class PokemonGo(object):
         return self.device_id
 
     async def run(self, args):
-        logger.info("Running %s", args)
+        logger.debug("Running %s", args)
         p = subprocess.Popen([str(arg) for arg in args], stdout=subprocess.PIPE)
         stdout, stderr = p.communicate()
         logger.debug("Return code %d", p.returncode)
@@ -109,7 +109,7 @@ class PokemonGo(object):
             line = await self.read_logcat()
             match = RE_CLIPBOARD_TEXT.match(line)
             if match:
-                logger.info("RE_CLIPBOARD_TEXT matched.")
+                logger.info("RE_CLIPBOARD_TEXT matched, got data from CalcyIV.")
                 return match.group(1)
 
     async def send_intent(self, intent, package=None, extra_values=[]):
@@ -127,15 +127,19 @@ class PokemonGo(object):
         await self.run(["adb", "-s", await self.get_device(), "shell", cmd])
 
     async def tap(self, x, y):
+        logger.info("Tapping at [{}, {}]".format(x, y))
         await self.run(["adb", "-s", await self.get_device(), "shell", "input", "tap", x, y])
 
     async def key(self, key):
+        logger.info("Pressing key {}".format(key))
         await self.run(["adb", "-s", await self.get_device(), "shell", "input", "keyevent", key])
 
     async def text(self, text):
+        logger.info("Typing {}".format(text))
         await self.run(["adb", "-s", await self.get_device(), "shell", "input", "text", text])
 
     async def swipe(self, x1, y1, x2, y2, duration=None):
+        logger.info("Swiping from [{}, {}] to [{}, {}] in {} milisseconds.".format(x1, y1, x2, y2, duration))
         args = [
             "adb",
             "-s",
