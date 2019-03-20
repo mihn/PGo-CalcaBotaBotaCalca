@@ -4,5 +4,7 @@ rename: 1
 rename_ok: 2.1
 pokemon_menu_button: 1
 appraise_button: 1.4
-calcy_appraisal_save_button: 7 #4
+calcy_appraisal_save_button: 7
 continue_appraisal: 0.05
+scroll_to_moves: 1
+scroll_to_top: 1

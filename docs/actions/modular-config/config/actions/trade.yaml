@@ -107,6 +107,16 @@
     rename: "!{calcy}"
 
 
+####################
+### EVOLVE POKES ###
+####################
+# These are already traded pokemons but still good to mass evolve
+- conditions:
+    name__in: !include ../pokemons/evolve.yaml
+  actions:
+    rename: "Ω EVOLVE"
+
+
 ## Everything else is *definitely* trash
 - actions:
     rename: "%% TRASH %%"

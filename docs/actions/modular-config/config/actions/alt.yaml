@@ -178,6 +178,8 @@
 # action: block in here.
 - conditions:
     iv_max__lt: 95
+  actions:
+    rename: " "
 
 # This renames anything else that doesn't match any rule above
 # which, in theory, shouldn't happen. So if you see a pokemon with
