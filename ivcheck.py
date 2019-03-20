@@ -255,7 +255,6 @@ class Main:
                     await self.tap('paste')
                 else:
                     await self.p.key('KEYCODE_PASTE')  # Paste into rename
-                # await self.tap('keyboard_ok')  # Instead of yet another tap, use keyevents for reliability
                 await self.p.key('KEYCODE_TAB')
                 await self.p.key('KEYCODE_ENTER')
                 await self.tap('rename_ok')

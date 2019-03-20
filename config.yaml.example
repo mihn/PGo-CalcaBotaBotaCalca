@@ -1,7 +1,6 @@
 locations:
     rename: [539, 936]
     next: [980, 280]
-    keyboard_ok: [933, 1085]
     rename_ok: [540, 1050]
     close_calcy_dialog: [966, 1092]
     edit_box: [90, 1090] # only used with --touch-paste
