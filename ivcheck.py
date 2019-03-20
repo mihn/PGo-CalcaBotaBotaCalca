@@ -236,7 +236,7 @@ class Main:
 
             if "get_moves" in actions:
                 # If calcyiv already has both moves, then skip this action
-                if values['fast_move'] == '' or values['charge_move'] == '':
+                if values['fast_move'] == '' or values['charge_move'] == '' or values['fast_move'] == 'err' or values['charge_move'] == 'err':
                     await self.swipe('scroll_to_moves', 500)
                     moves_state, moves_values = await self.check_pokemon()
                     if 'calcy' in moves_values:
