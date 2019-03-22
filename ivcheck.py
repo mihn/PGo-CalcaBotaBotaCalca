@@ -180,6 +180,7 @@ class Main:
         count = 0
         num_errors = 0
         while True:
+            # This loop also needs refactoring
             blacklist = False
             state, values = await self.check_pokemon()
 
@@ -209,7 +210,11 @@ class Main:
 
             values["success"] = True if state == CALCY_SUCCESS and blacklist is False else False
             values["blacklist"] = blacklist
-            values["appraised"] = True if values["appraised"] is True else False
+            try:
+                # This try/except should go somehow on the if block above probably
+                values["appraised"] = True if values["appraised"] is True else False
+            except KeyError:
+                values["appraised"] = False
 
             actions = await self.get_actions(values)
 
