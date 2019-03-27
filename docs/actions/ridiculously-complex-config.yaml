@@ -1,4 +1,3 @@
-
 ## This shows the complexity level that you can achieve with the renamer.
 ## It's actually my true config.yaml
 
@@ -215,8 +214,3 @@ actions:
     #  which, in theory, shouldn't happen, so it adds a prefix to fix the rules
     - actions:
         rename: "¿ {calcy}"
-
-
-iv_regexes:
-    - ^.+  +(?P<iv>\d+)$
-    - ^.+  +(?P<iv_min>\d+)\-(?P<iv_max>\d+)$

@@ -1,33 +1,46 @@
+# Change location values if you get unexpected results
 locations:
-    rename: [539, 936]
-    next: [980, 280]
-    rename_ok: [540, 1050]
-    close_calcy_dialog: [966, 1092]
-    edit_box: [90, 1090] # only used with --touch-paste
-    paste: [483, 1092] # only used with --touch-paste
-    favorite_button: [980, 156]
-    favorite_button_box: [960, 142, 1001, 180]
-    pokemon_menu_button: [933, 1777]
-    appraise_button: [934, 1377]
-    continue_appraisal: [590, 1770]
-    calcy_appraisal_save_button: [855, 1000]
-    dismiss_calcy: [555, 1296]
-    appraisal_box: [45, 1664, 1032, 1872]
+    close_calcy_dialog: [880, 1160]
     scroll_to_moves: [45, 1864, 45, 1200]
     scroll_to_top: [45, 1000, 45, 1864]
+    pokemon_menu_button: [940, 1700]
+    appraise_button: [940, 1315]
+    appraisal_box: [45, 1594, 1032, 1792]
+    continue_appraisal: [540, 1100]
+    calcy_appraisal_save_button: [880, 800]
+    dismiss_calcy: [540, 1170]
+    favorite_button_box: [960, 142, 1001, 180]
+    favorite_button: [970, 160]
+    rename: [530, 880]
+    edit_box: [90, 1090] # only used with --touch-paste
+    paste: [483, 1092] # only used with --touch-paste
+    rename_ok: [540, 1050]
+    next: [980, 280]
 
+# Increase wait times if the script runs faster than your phone
 waits:
     next: 0.5
     rename: 0.5
     rename_ok: 1
     pokemon_menu_button: 1
     appraise_button: 1
+    calcy_appraisal_save_button: 3
+    continue_appraisal: 0.3
+    scroll_to_moves: 1
+    scroll_to_top: 1
 
 blacklist: !include blacklist.yaml
 
 actions:
-    - actions:
-        rename-calcy: # Rename normally
+	- conditions:
+	    success: false
+	  actions:
+        rename: "! Failed"
+		
+	- conditions:
+	    success: true
+	  actions:
+        rename: {calcy}
 
 
 iv_regexes:

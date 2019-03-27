@@ -245,7 +245,7 @@ class Main:
                     logger.warning("Scrolling up again...")
                     await self.swipe('scroll_to_top', 500)
 
-            if "rename" in actions or "rename-calcy" in actions:
+            if "rename" in actions:
                 if values["success"] is False:
                     await self.tap('close_calcy_dialog')  # it gets in the way
                 await self.tap('rename')

@@ -4,13 +4,13 @@
 # Description
 This is a small script which uses adb to send touch and key events to your phone, in combination with Calcy IV it can automatically rename all of your pokémon. This script doesn't login to the pokémon go servers using the "unofficial API" and only relies on an Android phone (sorry, iPhone users). The upside to this is that you're very unlikely to get banned for using it. The downside is that it's a lot slower, and that you can't use your phone while it's running.
 
-## Warnings
+### Warnings
 This script essentially blindly sends touch events to your phone. If a popup appears over where the script thinks a button is, or if your phone lags, it can do unintended things. Please keep an eye on your phone while it is running. If it transfers your shiny 100% Dragonite, it's because you weren't watching it.
 
 # Installation
-## Prerequisites
+### Prerequisites
 
-*You only need to perform this steps once*
+*You only need to perform these steps once*
 
 - Download all the files from this repository.
 - Install `adb`, make sure it's on your systems PATH, alternatively you can place adb in the same folder as ivcheck.py.
@@ -18,9 +18,9 @@ This script essentially blindly sends touch events to your phone. If a popup app
 - Install Python >=3.7 (older versions will not work).
 - Open a terminal/command prompt and run `pip install -r requirements.txt` to install the required libraries for the script to work.
 
-## Configuration
+### Configuration
 
-*You only need to perform this steps once*
+*You only need to perform these steps once*
 
 - Connect your phone to the computer via `adb` (you have to enable debugging in **Settings > Developer options**).
 - Copy or rename `config.example.yaml` to `config.yaml`.
@@ -36,14 +36,14 @@ This script essentially blindly sends touch events to your phone. If a popup app
 
 # Usage
 
-## Basic Usage
+### Basic Usage
 - Connect your device to the computer.
 - Open PoGo and CalcyIV.
 - Go to a pokémon screen, and run: `python ivcheck.py`
 
 _That's it!  :D_
 
-## Rulesets
+### Rulesets
 Rulesets allow you to define new ways of renaming your pokémon, outside of the usual Calcy IV renaming scheme. Rulesets are processed from first to last, and the first one to have all its conditions pass is used.
 
 ### Conditions:
@@ -168,7 +168,7 @@ _Conditions also support the following operators:_
 # _(now, a decent)_ FAQ
 1. It taps in the wrong locations / doesn't work / automatically called my mother:
 
-    You probably need to edit the `locations:` in config.yaml, the defaults are for a 1080p phone. **You can find where the spots are supposed to be in [docs/locations](docs/locations)!**
+    You probably need to edit the `locations:` in config.yaml, the defaults are for a 1080p phone without soft keys. **You can find where the spots are supposed to be in [docs/locations](docs/locations)!**
 
     To find out the coordinates, enable *Pointer Location* in your phone's *Developer Settings*. If you're lazy like me, just type the code below with your phone connected:
 
@@ -188,7 +188,7 @@ _Conditions also support the following operators:_
 
 2. It's not pasting the pokémon's name!
 
-    Unfortunately, the paste key event doesn't work on older versions of Android. Use the `--nopaste` argument to paste it by tapping (make sure you edit the `locations:` accordingly).
+    Unfortunately, the paste key event doesn't work on older versions of Android. Use the `--touch-paste` argument to paste it by tapping (make sure you edit the `locations:` accordingly).
 
 3. It's going too fast for my phone! :O
 

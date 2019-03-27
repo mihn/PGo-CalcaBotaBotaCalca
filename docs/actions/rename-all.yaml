@@ -9,4 +9,4 @@ actions:
     - conditions:
         success: true
       actions:
-        rename-calcy:
+        rename: {calcy}
