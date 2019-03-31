@@ -1,8 +1,8 @@
 locations:
-  !include config/locations/redminote1080x2160.yaml
+  !include config/locations/redmi.yaml
 
 waits:
-  !include config/waits/redminote.yaml
+  !include config/waits/redmi.yaml
 
 blacklist:
   -
@@ -14,11 +14,11 @@ blacklist:
 #  default:   for main acc
 #  alt:       for alt acc
 #  prettify:  for main after renaming with default.
-#               filter by * and run this
+#               howto: filter by * and run this
 #  trade:     for main and alt *after* trading lots of pokes.
-#               filter by 'trade' and run this
+#               howto: filter by 'trade' and run this
 #  unown:     for main after renaming with default.
-#               filter by 'unown' and run this.
+#               howto: filter by 'unown' and run this.
 ## *Take a look at those yamls yourself, so you understand better how this works*
 actions:
   !include config/actions/default.yaml
@@ -26,5 +26,6 @@ actions:
 
 ## How trading symbols (should, threoretically) work:
 # π is for safe trading (automated, shouldn't trade anything special)
-# μ is for not-so-safe trading (you can automate, but trade against μ only)
-# Ω is for evo pokes (for using lucky egg). You can trade them for candy.
+# Ω is for evo pokes (for using lucky egg). You can trade them for candy,
+#   alongside π, and then evolve the already traded ones! :D
+# μ are not-that-safe pokemons for auto-trading. I'd advise trading π for π only, so it's fair.

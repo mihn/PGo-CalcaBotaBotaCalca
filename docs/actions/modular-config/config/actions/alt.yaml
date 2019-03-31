@@ -131,12 +131,12 @@
 ## though for main, these are μ, which means they're actually better be checked
 ## before trading, or trade exclusively with other μ pokes
 - conditions:
-    level__ge: 30
+    level__ge: 33
     lucky: false
   actions:
     rename: "π{level} TRADE"
 - conditions:
-    cp__ge: 2000
+    cp__ge: 2300
     lucky: false
   actions:
     rename: "π{level} TRADE"
@@ -161,7 +161,6 @@
     rename: "π TRADE"
 
 
-
 ###########################
 ### FOR MANUAL CHECKING ###
 ###########################
@@ -178,8 +177,6 @@
 # action: block in here.
 - conditions:
     iv_max__lt: 95
-  actions:
-    rename: " "
 
 # This renames anything else that doesn't match any rule above
 # which, in theory, shouldn't happen. So if you see a pokemon with

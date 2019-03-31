@@ -51,8 +51,10 @@
 
 
 ## Renames babies to be renamed afterwards with emi_prettify.yaml
+## only if IV is greater than 90
 - conditions:
     name__in: !include ../pokemons/babies.yaml
+    iv_max__gt: 90
   actions:
     rename: "*{name}{iv_avg}"
 
@@ -149,21 +151,11 @@
   actions:
     rename: "μ{level} TRAD {iv_max}"
 
-# We can also trade anything high level or hich CP, maybe we get Lucky (ha)
-- conditions:
-    level__ge: 30
-    lucky: false
-  actions:
-    rename: "μ{level} TRADE"
-- conditions:
-    cp__ge: 2000
-    lucky: false
-  actions:
-    rename: "μ{level} TRADE"
-
 ####################
 ### EVOLVE POKES ###
 ####################
+# These are pokemons for mass evolving (12 candy per pokémon), which you
+# should rather trade before mass evolving so you get even more candies! :D
 - conditions:
     name__in: !include ../pokemons/evolve.yaml
   actions:
@@ -187,9 +179,15 @@
     appraise:
     rename: "! {calcy}"
 
-# Any left less than 95 iv gets skipped
+## Anything left less than 95% iv gets skipped.
 - conditions:
     iv_max__lt: 95
+
+## In some cases (like when one of the accounts does not have too many pokémons for
+## trade), you might want to rename anything left for trading, instead of skipping.
+## For that, uncomment both lines below by removing the #
+#  actions:
+#    rename: "⇆ {level} TRADE"
 
 
 # This renames anything else that doesn't match any rule above

@@ -1,0 +1,15 @@
+## Locations for Redmi Note 5 with density
+## override 408 and native resolution
+
+rename: [540, 920]
+next: [1000, 600]
+rename_ok: [550, 1170]
+close_calcy_dialog: [900, 1500]
+favorite_button: [970, 190]
+favorite_button_box: [955, 175, 995, 200]
+pokemon_menu_button: [930, 2020]
+appraise_button: [940, 1620]
+continue_appraisal: [550, 1415]
+calcy_appraisal_save_button: [870, 870]
+dismiss_calcy: [540, 1230]
+appraisal_box: [70, 1920, 1020, 2090]

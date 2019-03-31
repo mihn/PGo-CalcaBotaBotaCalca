@@ -1,0 +1,16 @@
+## locations for 1080x1920 (native)
+
+rename: [540, 880]
+rename_ok: [540, 1010]
+next: [1000, 530]
+close_calcy_dialog: [910, 1090]
+favorite_button: [975, 180]
+favorite_button_box: [969, 173, 988, 190]
+pokemon_menu_button: [940, 1700]
+appraise_button: [940, 1320]
+continue_appraisal: [540, 1140]
+calcy_appraisal_save_button: [880, 890]
+dismiss_calcy: [540, 1140]
+appraisal_box: [60, 1625, 1000, 1780]
+scroll_to_moves: [40, 1700, 40, 1000]
+scroll_to_top: [40, 900, 40, 1700]
