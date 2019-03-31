@@ -1,4 +1,5 @@
-# Change location values if you get unexpected results
+## Change location values if you get unexpected results
+## Check out docs/locations/ for images for each location
 locations:
     close_calcy_dialog: [880, 1160]
     scroll_to_moves: [45, 1864, 45, 1200]
@@ -12,12 +13,12 @@ locations:
     favorite_button_box: [960, 142, 1001, 180]
     favorite_button: [970, 160]
     rename: [530, 880]
-    edit_box: [90, 1090] # only used with --touch-paste
-    paste: [483, 1092] # only used with --touch-paste
+    edit_box: [90, 1090]    # only used with --touch-paste
+    paste: [483, 1092]      # only used with --touch-paste
     rename_ok: [540, 1050]
     next: [980, 280]
 
-# Increase wait times if the script runs faster than your phone
+## Increase wait times if the script runs faster than your phone
 waits:
     next: 0.5
     rename: 0.5
@@ -29,20 +30,24 @@ waits:
     scroll_to_moves: 1
     scroll_to_top: 1
 
+## Add your own pokémons to skip renaming in the file blacklist.yaml
+## The default set includes only pokémons that *can cause false positives*.
 blacklist: !include blacklist.yaml
 
+## The ruleset below is as basic as it gets.
+## If you wanna get fancy and customize your own renaming scheme take a look
+## at the examples in docs/actions/. There's also a prefix order list in the
+## file ACTIONS.md, so you can customize the order in which your pokémon will
+## be shown when sorting by A-Z.
 actions:
-	- conditions:
-	    success: false
-	  actions:
+    # Renames failed scans for manual verification:
+    - conditions:
+        success: false
+      actions:
         rename: "! Failed"
-		
-	- conditions:
-	    success: true
-	  actions:
+
+    # Renames everything else exactly as your CalcyIV setup:
+    - conditions:
+        success: true
+      actions:
         rename: {calcy}
-
-
-iv_regexes:
-    - ^(?P<iv_min>\d+)\-(?P<iv_max>\d+).*$
-    - ^(?P<iv>\d+).*$
