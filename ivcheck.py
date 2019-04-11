@@ -249,7 +249,8 @@ class Main:
                 if values["success"] is False:
                     await self.tap('close_calcy_dialog')  # it gets in the way
                 await self.tap('rename')
-                if actions.get("rename", "{calcy}") != "{calcy}": # Don't bother setting clipboard if we don't need to change it
+                if not (actions.get("rename", "{calcy}") == "{calcy}" or ('calcy' in actions["rename"] and len(actions["rename"]) == 1)): # Don't bother setting clipboard if we don't need to change it
+                                                                                                                                          # also now allows users to forget to enclose {calcy} in quotes.
                     await self.p.send_intent("clipper.set", extra_values=[["text", actions["rename"].format(**values)]])
 
                 if args.touch_paste:
