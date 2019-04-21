@@ -12,18 +12,26 @@ This script essentially blindly sends touch events to your phone. If a popup app
 
 *You only need to perform these steps once*
 
-- Download all the files from this repository.
-- Install `adb`, make sure it's on your systems PATH, alternatively you can place adb in the same folder as ivcheck.py.
-- Install [clipper](https://github.com/majido/clipper) in your device and start the service.
-- Install Python >=3.7 (older versions will not work).
-- Open a terminal/command prompt and run `pip install -r requirements.txt` to install the required libraries for the script to work.
+1. [Download all the files](https://github.com/esauvisky/PGo-CalcaBotaBotaCalca/archive/master.zip) from this repository. Unzip everything into a directory.
+2. Install `adb`, and make sure it's on your system's PATH. 
+  
+   • _Windows users can install the SDK Platform Tools via [this link](https://developer.android.com/studio/releases/platform-tools)._
+3. Install [clipper](https://github.com/majido/clipper) in your device and run the app/service.
+4. Install Python >=3.7 (older versions will not work). 
+
+   • _Windows users can go [here](https://www.python.org/downloads/windows/) and select [Download Windows x86-64 executable installer](https://www.python.org/ftp/python/3.7.3/python-3.7.3-amd64.exe) under **Stable Releases**._
+5. Now, open a terminal in the repository directory you unzipped in step 1. 
+
+   • _Windows users can [open a command prompt inside the folder](https://www.google.com/search?q=open+a+command+prompt+in+a+folder "In File Explorer, press and hold the Shift key, then right click or press and hold on a folder or drive that you want to open the command prompt at that location for, and click/tap on Open Command Prompt Here option.") (hover the link for TL;DR)._
+6. Run `pip install -r requirements.txt` to install the required libraries for the script to work.
 
 ### Configuration
 
 *You only need to perform these steps once*
 
-- Connect your phone to the computer via `adb` (you have to enable debugging in **Settings > Developer options**).
 - Copy or rename `config.example.yaml` to `config.yaml`.
+- Enable _USB Debugging_ in **Settings > Developer options** in your device, and connect it to the computer.
+- In the command prompt, type `adb devices -l` and see if it properly detects the device.
 - Run `python ivcheck.py --copy-calcy`. This will copy into your device clipboard the renaming string the script needs to function.
 - In your device, open **CalcyIV -> Renaming**, go to the end of **both** your renaming strings and **Paste**. Check out [the GIF](#now-a-decent-faq) in the FAQ if you're a bit confused.
 
