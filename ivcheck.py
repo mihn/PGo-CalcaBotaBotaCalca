@@ -227,10 +227,10 @@ class Main:
                 while await self.check_appraising():
                     await self.tap("continue_appraisal")
                 await self.tap("calcy_appraisal_save_button")
-                values["appraised"] = True
                 clipboard, clipboard_values = await self.get_data_from_clipboard()
                 values = {**values, **clipboard_values}
                 values["calcy"] = clipboard
+                values["appraised"] = True
                 actions = await self.get_actions(values)
                 await self.tap("dismiss_calcy")
 
