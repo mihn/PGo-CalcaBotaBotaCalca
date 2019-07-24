@@ -216,18 +216,15 @@ class Main:
             if "appraise" in actions:
                 await self.tap("pokemon_menu_button")
                 await self.tap("appraise_button")
+                await self.tap("continue_appraisal")
                 await self.p.send_intent("tesmath.calcy.ACTION_ANALYZE_SCREEN", "tesmath.calcy/.IntentReceiver", [["silentMode", True], ["--user", self.args.user]])
-                for _ in range(0, 4):  # we can do it four times before beggining to screencap
-                    await self.tap("continue_appraisal")
-                while await self.check_appraising():
-                    await self.tap("continue_appraisal")
-                await self.tap("calcy_appraisal_save_button")
+                await self.tap("dismiss_calcy")
+                await self.tap("continue_appraisal")
+                values["appraised"] = True
                 clipboard, clipboard_values = await self.get_data_from_clipboard()
                 values = {**values, **clipboard_values}
                 values["calcy"] = clipboard
-                values["appraised"] = True
                 actions = await self.get_actions(values)
-                await self.tap("dismiss_calcy")
 
             if "get_moves" in actions:
                 # If calcyiv already has both moves, then skip this action
@@ -291,26 +288,6 @@ class Main:
         values['iv'] = values['iv_min'] if values['iv_min'] == values['iv_max'] else None
 
         return calcy, values
-
-    async def check_appraising(self):
-        """
-        Not the best check, just search the area
-        for white pixels
-        """
-        screencap = await self.p.screencap()
-        crop = screencap.crop(self.config['locations']['appraisal_box'])
-        rgb_im = crop.convert('RGB')
-        width, height = rgb_im.size
-        colors = [(255, 255, 255)]
-
-        color_count = 0
-        for x in range(1, width):
-            for y in range(1, height):
-                c = rgb_im.getpixel((x, y))
-                if c in colors:
-                    color_count += 1
-        return color_count > 100000
-
 
     async def check_favorite(self):
         """Searches the favorite_button_box area for
