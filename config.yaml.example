@@ -8,7 +8,6 @@ locations:
     appraise_button: [940, 1315]
     appraisal_box: [45, 1594, 1032, 1792]
     continue_appraisal: [540, 1100]
-    calcy_appraisal_save_button: [880, 800]
     dismiss_calcy: [540, 1170]
     favorite_button_box: [960, 142, 1001, 180]
     favorite_button: [970, 160]
@@ -25,8 +24,8 @@ waits:
     rename_ok: 1
     pokemon_menu_button: 1
     appraise_button: 1
-    calcy_appraisal_save_button: 3
-    continue_appraisal: 0.3
+    continue_appraisal: 0.5
+    dismiss_calcy: 0.2
     scroll_to_moves: 1
     scroll_to_top: 1
 
