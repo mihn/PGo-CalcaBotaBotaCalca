@@ -283,7 +283,10 @@ class Main:
             if function is None:
                 values[name] = data[i]
             else:
-                values[name] = function(data[i])
+                try:
+                    values[name] = function(data[i])
+                except:
+                    values[name] = ''
         values['iv_avg'] = int((values['iv_min'] + values['iv_max']) / 2)
         values['iv'] = values['iv_min'] if values['iv_min'] == values['iv_max'] else None
 
