@@ -15,6 +15,7 @@
     appraise:
     rename: "∅{calcy}"
 
+
 ##############
 ## LEGACIES ##
 ##############
@@ -24,6 +25,7 @@
     appraised: false
   actions:
     appraise:
+
 # Good legacy + legendary, prolly going to get used by alt
 - conditions:
     legacy: true
@@ -32,26 +34,28 @@
     name__in: !include ../pokemons/legendaries.yaml
   actions:
     favorite:
-    rename: "•{calcy}"
+    rename: "·{calcy}"
 # Rest of legacy + legendary, prolly going to get traded anytime
 - conditions:
     legacy: true
     name__in: !include ../pokemons/legendaries.yaml
   actions:
     favorite:
-    rename: "+{calcy}"
+    rename: "•{calcy}"
 # Rest of legacies non legendary, prolly going to get traded as well
 - conditions:
     legacy: true
   actions:
     favorite:
-    rename: '+{calcy}' # legacies non legandaries
+    rename: '•{calcy}' # legacies non legandaries
 
 
-
-## Renames unowns to be renamed afterwards with emi_unowns.yaml
-## We would trade them but not automatically, they can be worth
-## a penny or so.
+############
+## RANDOM ##
+############
+## Renames unowns to be renamed afterwards with unown.yaml
+## We'll trade them, but manually, as they can be worth a
+## penny or so.
 - conditions:
     name__in:
       - Unown
@@ -59,19 +63,13 @@
     rename: "* The {iv_avg}"
 
 
-## Babies go to main, I don't care about babies on alt, waste of space
-- conditions:
-    name__in: !include ../pokemons/babies.yaml
-  actions:
-    rename: "π TRADE {iv_avg}"
-
-
 ## Renames random rare & bizarre stuff and those "one-time only"
-## pokémons to be renamed afterwards with emi_prettify.yaml
+## pokémons to be renamed afterwards with emi_prettify.yaml and
+## then eventually traded.
 - conditions:
     name__in: !include ../pokemons/rares.yaml
   actions:
-    rename: "μ TRADE RARE"
+    rename: "*{name}{iv_avg}"
 
 
 ## Good legendaries stay at alt
@@ -79,13 +77,13 @@
     iv_max__ge: 90
     name__in: !include ../pokemons/legendaries.yaml
   actions:
-    rename: "•{calcy}"
+    rename: "·{calcy}"
 ## Bad ones, for eventual trade (just like the legacies above)
 - conditions:
     iv_max__lt: 90
     name__in: !include ../pokemons/legendaries.yaml
   actions:
-    rename: "+{calcy}"
+    rename: "•{calcy}"
 
 
 ##############
@@ -102,7 +100,7 @@
 - conditions:
     iv__eq: 100
   actions:
-    rename: "{calcy}"
+    rename: "•{calcy}"
 
 
 #####################
@@ -115,21 +113,22 @@
     name__in: !include ../pokemons/metarelevant.yaml
   actions:
     appraise:
-    rename: "{calcy}"
+    rename: "•{calcy}"
+
 # Rest we trade
 - conditions:
     name__in: !include ../pokemons/metarelevant.yaml
   actions:
-    rename: "μ{level} TRADE {iv}"
+    rename: "μ{level} TRADE {iv_avg}"
 
 
 ##############
 ### TRADES ###
 ##############
 ## We can also trade anything high level or hich CP, maybe we get Lucky (ha)
-## For alt, these are π, i.e.: we don't really care so we can automatic trade
-## though for main, these are μ, which means they're actually better be checked
-## before trading, or trade exclusively with other μ pokes
+## For alt, these are π, i.e.: we don't really care so we can automatic trade.
+## For the main acc, tho, these are μ, which means they actually better be
+## manually checked before trading, or traded exclusively with other μ pokés.
 - conditions:
     level__ge: 33
     lucky: false
@@ -141,46 +140,75 @@
   actions:
     rename: "π{level} TRADE"
 
-## PVP is not yet sorted out
+## Babies go to main, I don't care about babies on alt, waste of space
+- conditions:
+    name__in: !include ../pokemons/babies.yaml
+  actions:
+    rename: "π TRADE {iv_avg}"
+
+## Renames the rest of pokémons good for candies
+- conditions:
+    name__in: !include ../pokemons/trade_candy.yaml
+  actions:
+    rename: "π{level} TRADE"
+
+## Renames the rest of pokémons good for candies
+- conditions:
+    name__in: !include ../pokemons/trade_candy_alt.yaml
+  actions:
+    rename: "π{level} TRADE"
+
+
+
+###########
+### PVP ###
+###########
+# This is an experiment
 # - conditions:
 #     name__in: !include ../pokemons/pvp.yaml
+#     attack_iv__le: 2
+#     defense_iv__ge: 5
+#     hp_iv__ge: 5
 #   actions:
-#     rename: "†{level} TRADE"
+#     rename: "$PVP{attack_iv}-{defense_iv}-{hp_iv}"
+
+
+
 
 ####################
 ### EVOLVE POKES ###
 ####################
-- conditions:
-    name__in: !include ../pokemons/evolve.yaml
-  actions:
-    rename: "Ω TRADEVO"
-# Renames the rest of pokemons to trade for candies
-- conditions:
-    name__in: !include ../pokemons/trade_candy.yaml
-  actions:
-    rename: "π TRADE"
+## Pokémons for mass evolving. We wanna trade them
+## before evolving, of course.
+# - conditions:
+#     name__in: !include ../pokemons/evolve.yaml
+#   actions:
+#     rename: "• EVOLVE"
 
 
 ###########################
 ### FOR MANUAL CHECKING ###
 ###########################
+## These might be good, who knows. Probably gonna get
+## trashed or traded anyway, but doesn't hurt to take a look.
 - conditions:
     iv_max__ge: 95
   actions:
+    appraise:
     rename: "!{calcy}"
 
 
 #######################
 ### SKIPS AND TRASH ###
 #######################
-# Everything else below IV95 we're skipping (that's why there's no
-# action: block in here.
+## Everything else below IV95 we're skipping (that's why there's no
+## action: block in here.
 - conditions:
     iv_max__lt: 95
 
-# This renames anything else that doesn't match any rule above
-# which, in theory, shouldn't happen. So if you see a pokemon with
-# this character you know you have a mistake on this file and most
-# likely missed something.
+## This renames anything else that doesn't match any rule above
+## which, in theory, shouldn't happen. So if you see a pokemon with
+## this character you know you have a mistake on this file and most
+## likely missed something.
 - actions:
     rename: "¿ {calcy}"

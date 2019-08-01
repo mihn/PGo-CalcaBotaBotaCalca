@@ -22,12 +22,12 @@
     iv_max__gt: 90
   actions:
     favorite:
-    rename: "•{calcy}"
+    rename: "·{calcy}"
 - conditions:
     legacy: true
   actions:
     favorite:
-    rename: '{calcy}'
+    rename: '•{calcy}'
 
 
 ##############
@@ -54,10 +54,9 @@
 ## only if IV is greater than 90
 - conditions:
     name__in: !include ../pokemons/babies.yaml
-    iv_max__gt: 90
+    iv_max__ge: 93
   actions:
     rename: "*{name}{iv_avg}"
-
 
 ## Renames random rare & bizarre stuff and those "one-time only"
 ## pokémons to be renamed afterwards with emi_prettify.yaml
@@ -79,11 +78,11 @@
     name__in: !include ../pokemons/legendaries.yaml
     iv_max__gt: 90
   actions:
-    rename: "•{calcy}" # Good ones get custom prefix
+    rename: "·{calcy}" # Good ones get custom prefix
 - conditions:
     name__in: !include ../pokemons/legendaries.yaml
   actions:
-    rename: "{calcy}"  # The rest of them (IV <90), gets renamed without prefix
+    rename: "•{calcy}"  # The rest of them (IV <90), gets renamed without prefix
 
 
 ##############
@@ -107,7 +106,7 @@
 - conditions:
     iv__eq: 100
   actions:
-    rename: "{calcy}"
+    rename: "•{calcy}"
 
 
 #####################
@@ -121,7 +120,19 @@
     level__ge: 30
     name__in: !include ../pokemons/metarelevant.yaml
   actions:
-    rename: "{calcy}"
+    rename: "•{calcy}"
+
+###########
+### PVP ###
+###########
+# This is an experiment
+- conditions:
+    name__in: !include ../pokemons/pvp.yaml
+    attack_iv__le: 1
+    defense_iv__ge: 8
+    hp_iv__ge: 8
+  actions:
+    rename: "$PVP{attack_iv}-{defense_iv}-{hp_iv}"
 
 
 ##############
@@ -156,10 +167,10 @@
 ####################
 # These are pokemons for mass evolving (12 candy per pokémon), which you
 # should rather trade before mass evolving so you get even more candies! :D
-- conditions:
-    name__in: !include ../pokemons/evolve.yaml
-  actions:
-    rename: "Ω TRADEVO"
+# - conditions:
+#     name__in: !include ../pokemons/evolve.yaml
+#   actions:
+#     rename: "Ω TRADEVO"
 
 
 #######################
@@ -179,15 +190,14 @@
     appraise:
     rename: "! {calcy}"
 
-## Anything left less than 95% iv gets skipped.
+# Any left less than 95 iv gets skipped
 - conditions:
     iv_max__lt: 95
-
-## In some cases (like when one of the accounts does not have too many pokémons for
-## trade), you might want to rename anything left for trading, instead of skipping.
-## For that, uncomment both lines below by removing the #
-#  actions:
-#    rename: "⇆ {level} TRADE"
+# In particular cases (like when one of the accounts does not have too many pokémons
+# to trade), you might want to rename anything left for trading, instead of skipping.
+# To do it so, uncomment both line below
+  # actions:
+    # rename: "⇆ {level} TRADE"
 
 
 # This renames anything else that doesn't match any rule above

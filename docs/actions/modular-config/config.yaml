@@ -11,14 +11,18 @@ blacklist:
 
 
 ## Select below which action file you'd like to use:
-#  default:   for main acc
-#  alt:       for alt acc
-#  prettify:  for main after renaming with default.
-#               howto: filter by * and run this
-#  trade:     for main and alt *after* trading lots of pokes.
-#               howto: filter by 'trade' and run this
-#  unown:     for main after renaming with default.
-#               howto: filter by 'unown' and run this.
+#  default:   For main account
+#  alt:       For alt account
+#  prettify:  For main after renaming with default:
+#               1. Filter by '*,shiny,list-of-babies,list-of-rares' (get it on prettify.yaml)
+#               2. Run this
+#  traded:    For main and alt *after* trading lots of pokes:
+#               1. Filter by 'trade'
+#               2. Run this
+#  unown:     For main account:
+#               1. Filter by 'unown'
+#               2. Set calcy as: 'The $IV_AVG$'
+#               3. Run this
 ## *Take a look at those yamls yourself, so you understand better how this works*
 actions:
   !include config/actions/default.yaml

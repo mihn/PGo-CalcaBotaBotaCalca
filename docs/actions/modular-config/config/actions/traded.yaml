@@ -46,8 +46,10 @@
     rename: "{calcy}"
 
 # If it's a shitty lucky, well, lets check it manually.
+# Unless it's an evopoke, then we don't really care
 - conditions:
     lucky: true
+    name__not_in: !include ../pokemons/evolve.yaml
   actions:
     rename: "!{calcy}"
 
@@ -96,6 +98,19 @@
     rename: "{calcy}"
 
 
+###########
+### PVP ###
+###########
+# This is an experiment
+- conditions:
+    # name__in: !include ../pokemons/pvp.yaml
+    attack_iv__le: 2
+    defense_iv__ge: 5
+    hp_iv__ge: 5
+  actions:
+    rename: "$PVP{attack_iv}-{defense_iv}-{hp_iv}"
+
+
 #############
 ### TRASH ###
 #############
@@ -117,7 +132,7 @@
 - conditions:
     name__in: !include ../pokemons/evolve.yaml
   actions:
-    rename: "Ω EVOLVE"
+    rename: "∞ EVOLVE"
 
 
 - conditions:

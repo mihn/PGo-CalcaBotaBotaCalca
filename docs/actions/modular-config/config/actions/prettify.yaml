@@ -5,8 +5,8 @@
 #     - All pokemons in babies.yaml
 #     - All pokemons in rares.yaml
 #    (Tip: use 151 in place of Mew to get rid of Mewtwos)
-#    Last String was made on 21 feb:
-#     shiny,Spiritomb,Spinda,Shedinja,Celebi,151,Meltan,Pichu,Togepi,Igglybuff,Cleffa,Elekid,Smoochum,Magby,Budew,Wynaut,Tyrogue,Azurill,Munchlax,Riolu,Shinx,Mantyke,Chingling,Happiny
+#    Last String was made on july 3:
+#     shiny,*,Spiritomb,Spinda,Shedinja,Celebi,Mew,Meltan,Shellos East Sea,Pichu,Togepi,Igglybuff,Cleffa,Elekid,Smoochum,Magby,Budew,Wynaut,Tyrogue,Azurill,Munchlax,Riolu,Shinx,Mantyke,Chingling,Happiny,Bonsly
 # 3. Run the renamer with this config
 
 # Nobrainer:
@@ -42,23 +42,21 @@
 # Shundos with legacy movesets
 - conditions:
     iv_max__ge: 98
-    appraised: true
     legacy: true
   actions:
     favorite:
-    rename: '☀️ {calcy}'
+    rename: '☀{calcy}'
 # "Shundos"
 - conditions:
     iv_max__ge: 96
-    appraised: true
   actions:
-    rename: '☀️ {calcy}'
+    rename: '☀{calcy}'
 # Legacy movesets
 - conditions:
     legacy: true
   actions:
     favorite:
-    rename: '★ {calcy}'
+    rename: '★{calcy}'
 # Everything else
 - actions:
-    rename: "★ {calcy}"
+    rename: "★{calcy}"
