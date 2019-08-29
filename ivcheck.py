@@ -43,6 +43,7 @@ RE_RED_BAR = re.compile(r"^.+\(\s*\d+\): Screenshot #\d has red error box at the
 RE_SUCCESS = re.compile(r"^.+\(\s*\d+\): calculateScanOutputData finished after \d+ms$")
 RE_SCAN_INVALID = re.compile(r"^.+\(\s*\d+\): Scan invalid .+$")
 RE_SCAN_TOO_SOON = re.compile(r"^.+\(\s*\d+\): Detected power-up screen$")
+RE_SCAN_WRONG = re.compile(r"^.+\(\s*\d+\): .+try other monster of this family or other candy names$")
 
 NAME_MAX_LEN = 12
 
@@ -264,15 +265,15 @@ class Main:
                             final_name = re.sub(r"(.+)([A-Za-z])(.+)", r'\1\3', final_name)
                             logger.warning("Stripping last letter, new name is %s", final_name)
                             final_name_size = len(final_name)
-                    final_name_true_size = len(final_name.encode('utf-8')) / 2
+                            final_name_true_size = len(final_name.encode('utf-8')) / 2
 
                         if final_name_true_size > 12 or final_name_size > 12:
-                        logger.error("Resetting pokemon name with prefix, otherwise we'd get stuck! Other actions will still apply.")
-                        await self.p.send_intent("clipper.set", extra_values=[["text", '! LENGTH']])
-                    else:
+                            logger.error("Resetting pokemon name with prefix, otherwise we'd get stuck! Other actions will still apply.")
+                            await self.p.send_intent("clipper.set", extra_values=[["text", '! LENGTH']])
+                        else:
                             logger.warning("Managed to shorten pokemon's name, continuing...")
-                        logger.debug('Final string \'%s\' total real size: %s chars long.', final_name, final_name_true_size)
-                        await self.p.send_intent("clipper.set", extra_values=[["text", final_name]])
+                            logger.debug('Final string \'%s\' total real size: %s chars long.', final_name, final_name_true_size)
+                            await self.p.send_intent("clipper.set", extra_values=[["text", final_name]])
                     else:
                         logger.debug('Final string \'%s\' total real size: %s chars long.', final_name, final_name_true_size)
                         await self.p.send_intent("clipper.set", extra_values=[["text", final_name]])
@@ -469,7 +470,15 @@ class Main:
             match = RE_SCAN_TOO_SOON.match(line)
             if match:
                 values = None
-                logger.error("RE_SCAN_TOO_SOON matched, we're probably going too fast. If you get this error often, try raising 'waits -> rename_ok' in config.yaml")
+                logger.error("RE_SCAN_TOO_SOON matched, we're probably going too fast or you have some overlay covering values.")
+                logger.error("If you get this error often, try raising 'waits -> rename_ok' in config.yaml")
+                return CALCY_SCAN_TOO_SOON, values
+
+            match = RE_SCAN_WRONG.match(line)
+            if match:
+                values = None
+                logger.error("RE_SCAN_WRONG matched, we're probably going too fast or you have some overlay covering values.")
+                logger.error("If you get this error often, try raising 'waits -> rename_ok' in config.yaml")
                 return CALCY_SCAN_TOO_SOON, values
 
 
