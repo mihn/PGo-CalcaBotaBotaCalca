@@ -43,7 +43,6 @@ RE_RED_BAR = re.compile(r"^.+\(\s*\d+\): Screenshot #\d has red error box at the
 RE_SUCCESS = re.compile(r"^.+\(\s*\d+\): calculateScanOutputData finished after \d+ms$")
 RE_SCAN_INVALID = re.compile(r"^.+\(\s*\d+\): Scan invalid .+$")
 RE_SCAN_TOO_SOON = re.compile(r"^.+\(\s*\d+\): Detected power-up screen$")
-RE_SCAN_WRONG = re.compile(r"^.+\(\s*\d+\): .+try other monster of this family or other candy names$")
 
 NAME_MAX_LEN = 12
 
@@ -185,6 +184,7 @@ class Main:
             return
         count = 0
         num_errors = 0
+        # num_errors_too_soon = 0
         while True:
             # This loop also needs refactoring
             blacklist = False
@@ -196,23 +196,23 @@ class Main:
                 num_errors = 0
             elif state == CALCY_RED_BAR:
                 continue
-            elif state == CALCY_SCAN_TOO_SOON:
-                num_errors += 1  # uses the same variable as CALCY_SCAN_INVALID, as they'll never happen simultaneously
-                if num_errors < args.max_retries:
-                    logger.warning("Waiting three seconds and trying again (attempt #%s)", num_errors)
-                    await asyncio.sleep(3)
-                    continue
-                logger.warning("Failed %s times in a row, trying to close a potencially stuck rename dialog...", num_errors)
-                num_errors = 0
-                await self.tap('rename_ok')
-                continue
             elif state == CALCY_SCAN_INVALID:
                 num_errors += 1
                 if num_errors < args.max_retries:
                     await asyncio.sleep(0.1)  # waits a bit between each scan, otherwise goes too fast
-                                        # sometimes the pokemon takes around a second to make the arc-level visible
+                                              # sometimes the pokemon takes around a second to make the arc-level visible
                     continue
                 num_errors = 0
+            # if state == CALCY_SCAN_TOO_SOON or (state == CALCY_SCAN_INVALID and num_errors == 0):
+            #     num_errors_too_soon += 1
+            #     logger.error("Failed %s times in a row.", args.max_retries * num_errors_too_soon)
+            #     if num_errors_too_soon == 2:
+            #         logger.critical("Doesn't look like we can't do much. Moving on!")
+            #         num_errors_too_soon = 0
+            #         await self.tap('next')
+            #         continue
+            #     logger.warning("Trying to close a potencially stuck rename dialog...")
+            #     await self.tap('rename_ok')
 
             values["success"] = True if state == CALCY_SUCCESS else False
             values["blacklist"] = blacklist
@@ -224,8 +224,10 @@ class Main:
                 await self.tap("appraise_button")
                 await self.tap("continue_appraisal")
                 await self.p.send_intent("tesmath.calcy.ACTION_ANALYZE_SCREEN", "tesmath.calcy/.IntentReceiver", [["silentMode", True], ["--user", self.args.user]])
+                await asyncio.sleep(0.2)
                 await self.tap("dismiss_calcy")
-                await self.tap("continue_appraisal")
+                # await self.tap("continue_appraisal") # takes too long, we only need to wait a lot before the stats
+                await self.tap("dismiss_calcy")
                 values["appraised"] = True
                 clipboard, clipboard_values = await self.get_data_from_clipboard()
                 values = {**values, **clipboard_values}
@@ -245,7 +247,8 @@ class Main:
 
             if "rename" in actions:
                 if values["success"] is False:
-                    await self.tap('close_calcy_dialog')  # it gets in the way
+                    # await self.p.key('KEYCODE_BACK')  # closes calcy dialog
+                    await self.tap('close_calcy_dialog')
                 await self.tap('rename')
                 if not (actions.get("rename", "{calcy}") == "{calcy}" or ('calcy' in actions["rename"] and len(actions["rename"]) == 1)): # Don't bother setting clipboard if we don't need to change it
                                                                                                                                           # also now allows users to forget to enclose {calcy} in quotes.
@@ -471,13 +474,6 @@ class Main:
             if match:
                 values = None
                 logger.error("RE_SCAN_TOO_SOON matched, we're probably going too fast or you have some overlay covering values.")
-                logger.error("If you get this error often, try raising 'waits -> rename_ok' in config.yaml")
-                return CALCY_SCAN_TOO_SOON, values
-
-            match = RE_SCAN_WRONG.match(line)
-            if match:
-                values = None
-                logger.error("RE_SCAN_WRONG matched, we're probably going too fast or you have some overlay covering values.")
                 logger.error("If you get this error often, try raising 'waits -> rename_ok' in config.yaml")
                 return CALCY_SCAN_TOO_SOON, values
 
