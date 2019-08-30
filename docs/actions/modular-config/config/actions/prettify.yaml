@@ -1,13 +1,21 @@
+## This renames what I consider "special" pokémon, like babies,
+## random, rare, and one-time only pokémons. The full lists would be
+## the ones in lists babies.yaml and rares.yaml + eggsonly + mythical.
+
 ## How to use:
-# 1. Set calcy as: 'Name-Short''IV%Avg' ($NaAb$$IV%Avg$)
-# 2. Make a search string with:
-#     - shiny
-#     - All pokemons in babies.yaml
-#     - All pokemons in rares.yaml
-#    (Tip: use 151 in place of Mew to get rid of Mewtwos)
-#    Last String was made on july 3:
-#     shiny,*,Spiritomb,Spinda,Shedinja,Celebi,Mew,Meltan,Shellos East Sea,Pichu,Togepi,Igglybuff,Cleffa,Elekid,Smoochum,Magby,Budew,Wynaut,Tyrogue,Azurill,Munchlax,Riolu,Shinx,Mantyke,Chingling,Happiny,Bonsly
+# 1. Set calcy as:
+# - No Moves:
+#    "$Name$$Form$$Legacy$$IV%Avg$            $CatchDate$|$Lucky$|$ATT$|$DEF$|$HP$|$Gender$|$Trade$|$IV%Min$|$IV%Max$|$AttIV$|$DefIV$|$HpIV$|$FaMove$|$SpMove$|$Appraised$|$Legacy$"
+# - Moves:
+#    "$Name$$Form$$Legacy$$IV%Avg$            $CatchDate$|$Lucky$|$ATT$|$DEF$|$HP$|$Gender$|$Trade$|$IV%Min$|$IV%Max$|$AttIV$|$DefIV$|$HpIV$|$FaMove$|$SpMove$|$Appraised$|$Legacy$"
+# 2. Search for:
+#    "eggsonly,mythical,shinx,spinda,spiritomb,shedinja&!deoxys&!shiny&!costume"
 # 3. Run the renamer with this config
+#
+# TIP: You can also restore calcy's export: shiny.properties instead of copying and pasting the strings above.
+#      Be aware it's going to replace your symbols as well.
+
+
 
 # Nobrainer:
 - conditions:
@@ -17,7 +25,6 @@
 
 # Appraise everyhing that's not appraised yet
 - conditions:
-    iv:
     appraised: false
   actions:
     appraise:
@@ -27,36 +34,15 @@
 - conditions:
     name__in: !include ../pokemons/babies.yaml
   actions:
-    rename: "♥ {calcy}"
+    rename: "♥{calcy}"
 
 ## Renames random rare & bizarre stuff and
 ## those "one-time only" pokémons
 - conditions:
     name__in: !include ../pokemons/rares.yaml
   actions:
-    rename: "♣ {calcy}"
+    rename: "♣{calcy}"
 
-
-## From now on, everything else are shinies
-## so add a star to all of them.
-# Shundos with legacy movesets
-- conditions:
-    iv_max__ge: 98
-    legacy: true
-  actions:
-    favorite:
-    rename: '☀{calcy}'
-# "Shundos"
-- conditions:
-    iv_max__ge: 96
-  actions:
-    rename: '☀{calcy}'
-# Legacy movesets
-- conditions:
-    legacy: true
-  actions:
-    favorite:
-    rename: '★{calcy}'
-# Everything else
+## Everything else is neither baby nor rare, so..?
 - actions:
-    rename: "★{calcy}"
+    rename: "♠{calcy}"

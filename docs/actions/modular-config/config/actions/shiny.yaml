@@ -1,0 +1,63 @@
+## How to use:
+# 1. Set calcy as:
+# - No Moves:
+#    "$NaAb$$Form$$Legacy$$Perf/IV%$ $Lvl$            $CatchDate$|$Lucky$|$ATT$|$DEF$|$HP$|$Gender$|$Trade$|$IV%Min$|$IV%Max$|$AttIV$|$DefIV$|$HpIV$|$FaMove$|$SpMove$|$Appraised$|$Legacy$"
+# - Moves:
+#    "$NaAb$$Form$$Legacy$$Perf/IV%$ $FastType$$SpecialType$$Lvl$            $CatchDate$|$Lucky$|$ATT$|$DEF$|$HP$|$Gender$|$Trade$|$IV%Min$|$IV%Max$|$AttIV$|$DefIV$|$HpIV$|$FaMove$|$SpMove$|$Appraised$|$Legacy$"
+# 2. Search for:
+#    "shiny,eggsonly&costume,shiny"
+# 3. Run the renamer with this config
+#
+# TIP: You can also restore calcy's export: shiny.properties instead of copying and pasting the strings above.
+#      Be aware it's going to replace your symbols as well.
+
+
+# Nobrainer:
+- conditions:
+    success: false
+  actions:
+    rename: "! Verify"
+
+# Appraise everyhing that's not appraised yet
+- conditions:
+    appraised: false
+  actions:
+    appraise:
+
+## Renames shiny babies with hearts ...
+##    .... because shiny... babies.
+- conditions:
+    name__in: !include ../pokemons/babies.yaml
+  actions:
+    rename: "@♥{calcy}"
+
+## Renames random shiny rare, like meltan and
+## those "one-time only" pokémons.
+- conditions:
+    name__in: !include ../pokemons/rares.yaml
+  actions:
+    rename: "@♣{calcy}"
+
+## From now on, everything else are shinies
+## so add a star to all of them.
+# "Shundos" with legacy movesets
+- conditions:
+    iv_max__ge: 96
+    legacy: true
+  actions:
+    favorite:
+    rename: '@{calcy}'
+# "Shundos"
+- conditions:
+    iv_max__ge: 96
+  actions:
+    rename: '@{calcy}'
+# Legacy movesets
+- conditions:
+    legacy: true
+  actions:
+    favorite:
+    rename: '+{calcy}'
+# Everything else
+- actions:
+    rename: "+{calcy}"

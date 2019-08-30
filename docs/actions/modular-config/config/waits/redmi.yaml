@@ -1,7 +1,7 @@
-next: 0.7
-rename: 0.4
-rename_ok: 0.8
-pokemon_menu_button: 0.5
-appraise_button: 0.6
-continue_appraisal: 0.5
-dismiss_calcy: 0.2
+next: 0.8
+rename: 0.2
+rename_ok: 0.7
+pokemon_menu_button: 0.2
+appraise_button: 0.2
+continue_appraisal: 1.2
+dismiss_calcy: 0.4
