@@ -264,11 +264,14 @@ class Main:
                             final_name_size = len(final_name)
                             final_name_true_size = len(final_name.encode('utf-8')) / 2
 
-                        if final_name_true_size == 12.5 or final_name_size > 12:
-                            final_name = re.sub(r"(.+)([A-Za-z])(.+)", r'\1\3', final_name)
-                            logger.warning("Stripping last letter, new name is %s", final_name)
-                            final_name_size = len(final_name)
-                            final_name_true_size = len(final_name.encode('utf-8')) / 2
+                        if final_name_true_size >= 12.5 or final_name_size > 12:
+                            for _ in range(0,4):
+                                final_name = re.sub(r"(.+)([A-Za-z])(.+)", r'\1\3', final_name)
+                                logger.warning("Stripping last letter, new name is %s", final_name)
+                                final_name_size = len(final_name)
+                                final_name_true_size = len(final_name.encode('utf-8')) / 2
+                                if final_name_true_size <= 12 and final_name_size <= 12:
+                                    break
 
                         if final_name_true_size > 12 or final_name_size > 12:
                             logger.error("Resetting pokemon name with prefix, otherwise we'd get stuck! Other actions will still apply.")
