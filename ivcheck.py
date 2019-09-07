@@ -179,6 +179,37 @@ class Main:
             self.config = yaml.load(f, Loader)
         await self.p.start_logcat()
 
+    async def check_name_length(self, name):
+        name_size = len(name)
+        name_true_size = len(name.encode('utf-8')) / 2
+
+        if name_true_size > 12 or name_size > 12:
+            logger.error("Final string '%s' total size is too big: %s chars long, %s ascii chars long.", name, name_size, name_true_size)
+
+            if chr(189) in name:
+                name = name.replace(chr(189), '')
+                logger.warning("Removed character " + chr(189) + ", new name is %s", name)
+                name_size = len(name)
+                name_true_size = len(name.encode('utf-8')) / 2
+
+            if name_true_size >= 12.5 or name_size > 12:
+                for _ in range(0,4):
+                    name = re.sub(r"(.+)([A-Za-z])(.+)", r'\1\3', name)
+                    logger.warning("Stripping last letter, new name is %s", name)
+                    name_size = len(name)
+                    name_true_size = len(name.encode('utf-8')) / 2
+                    if name_true_size <= 12 and name_size <= 12:
+                        break
+
+            if name_true_size > 12 or name_size > 12:
+                logger.error("Resetting pokemon name with prefix, otherwise we'd get stuck! Other actions will still apply.")
+                name = '! LENGTH'
+            else:
+                logger.warning("Managed to shorten pokemon's name, continuing...")
+
+        logger.debug('Final string \'%s\' total real size: %s chars long.', name, name_true_size)
+        return name
+
     async def start(self):
         if await self.setup() is False:
             return
@@ -247,43 +278,13 @@ class Main:
 
             if "rename" in actions:
                 if values["success"] is False:
-                    # await self.p.key('KEYCODE_BACK')  # closes calcy dialog
                     await self.tap('close_calcy_dialog')
                 await self.tap('rename')
                 if not (actions.get("rename", "{calcy}") == "{calcy}" or ('calcy' in actions["rename"] and len(actions["rename"]) == 1)): # Don't bother setting clipboard if we don't need to change it
                                                                                                                                           # also now allows users to forget to enclose {calcy} in quotes.
-                    final_name = actions["rename"].format(**values)
-                    final_name_size = len(final_name)
-                    final_name_true_size = len(final_name.encode('utf-8')) / 2
-                    if final_name_true_size > 12 or final_name_size > 12:
-                        logger.error("Final string '%s' total size is too big: %s chars long, %s ascii chars long.", final_name, final_name_size, final_name_true_size)
-
-                        if chr(189) in final_name:
-                            final_name = final_name.replace(chr(189), '')
-                            logger.warning("Removed character " + chr(189) + ", new name is %s", final_name)
-                            final_name_size = len(final_name)
-                            final_name_true_size = len(final_name.encode('utf-8')) / 2
-
-                        if final_name_true_size >= 12.5 or final_name_size > 12:
-                            for _ in range(0,4):
-                                final_name = re.sub(r"(.+)([A-Za-z])(.+)", r'\1\3', final_name)
-                                logger.warning("Stripping last letter, new name is %s", final_name)
-                                final_name_size = len(final_name)
-                                final_name_true_size = len(final_name.encode('utf-8')) / 2
-                                if final_name_true_size <= 12 and final_name_size <= 12:
-                                    break
-
-                        if final_name_true_size > 12 or final_name_size > 12:
-                            logger.error("Resetting pokemon name with prefix, otherwise we'd get stuck! Other actions will still apply.")
-                            await self.p.send_intent("clipper.set", extra_values=[["text", '! LENGTH']])
-                        else:
-                            logger.warning("Managed to shorten pokemon's name, continuing...")
-                            logger.debug('Final string \'%s\' total real size: %s chars long.', final_name, final_name_true_size)
-                            await self.p.send_intent("clipper.set", extra_values=[["text", final_name]])
-                    else:
-                        logger.debug('Final string \'%s\' total real size: %s chars long.', final_name, final_name_true_size)
-                        await self.p.send_intent("clipper.set", extra_values=[["text", final_name]])
-
+                    name = actions["rename"].format(**values)
+                    final_name = await self.check_name_length(name)
+                    await self.p.send_intent("clipper.set", extra_values=[["text", final_name]])
 
                 if args.touch_paste:
                     await self.tap_and_hold('edit_box', 600)
