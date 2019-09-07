@@ -43,6 +43,7 @@ RE_RED_BAR = re.compile(r"^.+\(\s*\d+\): Screenshot #\d has red error box at the
 RE_SUCCESS = re.compile(r"^.+\(\s*\d+\): calculateScanOutputData finished after \d+ms$")
 RE_SCAN_INVALID = re.compile(r"^.+\(\s*\d+\): Scan invalid .+$")
 RE_SCAN_TOO_SOON = re.compile(r"^.+\(\s*\d+\): Detected power-up screen$")
+RE_OLD_BASE_STATS = re.compile(r"^.+\(\s*\d+\): Using legacy fallback for.+$")
 
 NAME_MAX_LEN = 12
 
@@ -110,6 +111,7 @@ CALCY_SUCCESS = 0
 CALCY_RED_BAR = 1
 CALCY_SCAN_INVALID = 2
 CALCY_SCAN_TOO_SOON = 3
+CALCY_OLD_BASE_STATS = 4
 
 class Loader(yaml.SafeLoader):
     def __init__(self, stream):
@@ -227,8 +229,12 @@ class Main:
                 num_errors = 0
             elif state == CALCY_RED_BAR:
                 continue
-            elif state == CALCY_SCAN_INVALID:
+            elif state == CALCY_SCAN_INVALID or state == CALCY_OLD_BASE_STATS:
                 num_errors += 1
+                if state == CALCY_OLD_BASE_STATS:
+                    await self.p.key('SHIFT TAB')
+                    await self.p.key('ENTER')
+                    await asyncio.sleep(0.5)
                 if num_errors < args.max_retries:
                     await asyncio.sleep(0.1)  # waits a bit between each scan, otherwise goes too fast
                                               # sometimes the pokemon takes around a second to make the arc-level visible
@@ -278,7 +284,9 @@ class Main:
 
             if "replace" in actions:
                 if values["success"] is False:
-                    await self.tap('close_calcy_dialog')
+                    await self.p.key('SHIFT TAB')
+                    await self.p.key('ENTER')
+                    await asyncio.sleep(0.5)
 
                 new_chr = actions["replace"]
 
@@ -305,7 +313,9 @@ class Main:
 
             if "rename" in actions:
                 if values["success"] is False:
-                    await self.tap('close_calcy_dialog')
+                    await self.p.key('SHIFT TAB')
+                    await self.p.key('ENTER')
+                    await asyncio.sleep(0.5)
                 await self.tap('rename')
                 if not (actions.get("rename", "{calcy}") == "{calcy}" or ('calcy' in actions["rename"] and len(actions["rename"]) == 1)): # Don't bother setting clipboard if we don't need to change it
                                                                                                                                           # also now allows users to forget to enclose {calcy} in quotes.
@@ -340,10 +350,9 @@ class Main:
 
         try:
             calcy, data = clipboard.split('\xa0'*NAME_MAX_LEN)
-        except ValueError:
-            logger.error('Received clipboard data that does not contain 12 non-breaking spaces, did you run --copy-calcy and paste onto the end of your calcy rename settings? Clipboard data follows')
-            logger.error(repr(clipboard))
-            print(repr(clipboard))
+        except ValueError as e:
+            logger.critical('Received clipboard data that does not contain 12 non-breaking spaces, did you run --copy-calcy and paste onto the end of your calcy rename settings? Clipboard data follows:')
+            logger.critical(repr(clipboard), exc_info=true)
             raise
         data = data.split('|')
         values = {}
@@ -508,6 +517,11 @@ class Main:
                 logger.error("If you get this error often, try raising 'waits -> rename_ok' in config.yaml")
                 return CALCY_SCAN_TOO_SOON, values
 
+            match = RE_OLD_BASE_STATS.match(line)
+            if match:
+                values = None
+                logger.error("RE_OLD_BASE_STATS matched, this is either an old pokemon or a scan error.")
+                return CALCY_OLD_BASE_STATS, values
 
 if __name__ == '__main__':
     if platform == 'win32':
