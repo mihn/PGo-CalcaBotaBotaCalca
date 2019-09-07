@@ -291,7 +291,7 @@ class Main:
                 new_chr = actions["replace"]
 
                 await self.tap('rename')
-                await self.p.key('KEYCODE_COPY')
+                await self.p.key('COPY')
                 old_name = await self.p.get_clipboard()
                 old_chr = old_name[:1]
                 logger.info('Replacing first character %s with %s', old_chr, new_chr)
@@ -304,10 +304,10 @@ class Main:
                     await self.tap_and_hold('edit_box', 600)
                     await self.tap('paste')
                 else:
-                    await self.p.key('KEYCODE_PASTE')  # Paste into rename
+                    await self.p.key('PASTE')  # Paste into rename
 
-                await self.p.key('KEYCODE_TAB')
-                await self.p.key('KEYCODE_ENTER')
+                await self.p.key('TAB')
+                await self.p.key('ENTER')
 
                 await self.tap('rename_ok')
 
@@ -327,10 +327,10 @@ class Main:
                     await self.tap_and_hold('edit_box', 600)
                     await self.tap('paste')
                 else:
-                    await self.p.key('KEYCODE_PASTE')  # Paste into rename
+                    await self.p.key('PASTE')  # Paste into rename
 
-                await self.p.key('KEYCODE_TAB')
-                await self.p.key('KEYCODE_ENTER')
+                await self.p.key('TAB')
+                await self.p.key('ENTER')
                 await self.tap('rename_ok')
 
             if "favorite" in actions:
