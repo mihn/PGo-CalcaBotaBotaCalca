@@ -276,6 +276,33 @@ class Main:
                     logger.warning("Scrolling up again...")
                     await self.swipe('scroll_to_top', 500)
 
+            if "replace" in actions:
+                if values["success"] is False:
+                    await self.tap('close_calcy_dialog')
+
+                new_chr = actions["replace"]
+
+                await self.tap('rename')
+                await self.p.key('KEYCODE_COPY')
+                old_name = await self.p.get_clipboard()
+                old_chr = old_name[:1]
+                logger.info('Replacing first character %s with %s', old_chr, new_chr)
+                new_name = new_chr + old_name[1:]
+
+                final_name = await self.check_name_length(new_name)
+                await self.p.send_intent("clipper.set", extra_values=[["text", final_name]])
+
+                if args.touch_paste:
+                    await self.tap_and_hold('edit_box', 600)
+                    await self.tap('paste')
+                else:
+                    await self.p.key('KEYCODE_PASTE')  # Paste into rename
+
+                await self.p.key('KEYCODE_TAB')
+                await self.p.key('KEYCODE_ENTER')
+
+                await self.tap('rename_ok')
+
             if "rename" in actions:
                 if values["success"] is False:
                     await self.tap('close_calcy_dialog')
