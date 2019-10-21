@@ -181,12 +181,17 @@ class Main:
             self.config = yaml.load(f, Loader)
         await self.p.start_logcat()
 
-    async def check_name_length(self, name):
+    async def check_name_length(self, name, strip_numberset = False):
         name_size = len(name)
         name_true_size = len(name.encode('utf-8')) / 2
 
         if name_true_size > 12 or name_size > 12:
             logger.error("Final string '%s' total size is too big: %s chars long, %s ascii chars long.", name, name_size, name_true_size)
+            if strip_numberset:
+                name = name.translate({ord(c): None for c in ''.join(NUMBER_SETS[2])})
+                logger.warning("Removed superscripted IV.")
+                name_size = len(name)
+                name_true_size = len(name.encode('utf-8')) / 2
 
             if chr(189) in name:
                 name = name.replace(chr(189), '')
@@ -319,8 +324,14 @@ class Main:
                 await self.tap('rename')
                 if not (actions.get("rename", "{calcy}") == "{calcy}" or ('calcy' in actions["rename"] and len(actions["rename"]) == 1)): # Don't bother setting clipboard if we don't need to change it
                                                                                                                                           # also now allows users to forget to enclose {calcy} in quotes.
+                    # Allows stripping superscripted IV to shorten the name
+                    strip_numberset = False
+                    if 'calcystrip' in actions["rename"]:
+                        actions["rename"] = actions["rename"].replace("{calcystrip}", "{calcy}")
+                        strip_numberset = True
+
                     name = actions["rename"].format(**values)
-                    final_name = await self.check_name_length(name)
+                    final_name = await self.check_name_length(name, strip_numberset)
                     await self.p.send_intent("clipper.set", extra_values=[["text", final_name]])
 
                 if args.touch_paste:
@@ -477,26 +488,6 @@ class Main:
             if args.verbose:
                 logger.debug("logcat line received: %s", line)
 
-            match = RE_CALCY_IV.match(line)
-            if match:
-                values = match.groupdict()
-                state = CALCY_SUCCESS
-                if values["name"] == 'err':
-                    logger.error("Got 'err' as name, we're probably going too fast. If you get this error often, try raising 'waits -> rename_ok' in config.yaml")
-                    return CALCY_SCAN_TOO_SOON, values
-                elif values["cp"] == "-1" or values["level"] == "-1.0":
-                    logger.error("Couldnt detect CP (got %s) or arc-level (got %s)", values["cp"], values["level"])
-                elif red_bar is True:
-                    logger.error("RE_CALCY_IV matched and red_bar is True")
-                    state = CALCY_RED_BAR
-                    return state, values
-                else:
-                    clipboard, clipboard_values = await self.get_data_from_clipboard()
-                    values = {**values, **clipboard_values}
-                    values["calcy"] = clipboard
-                    logger.warning(values)
-                    return state, values
-
             match = RE_RED_BAR.match(line)
             if match:
                 logger.error("RE_RED_BAR matched")
@@ -522,6 +513,30 @@ class Main:
                 values = None
                 logger.error("RE_OLD_BASE_STATS matched, this is either an old pokemon or a scan error.")
                 return CALCY_OLD_BASE_STATS, values
+
+            match = RE_CALCY_IV.match(line)
+            if match:
+                values = match.groupdict()
+                state = CALCY_SUCCESS
+                if values["name"] == 'err':
+                    logger.error("Got 'err' as name, we're probably going too fast. If you get this error often, try raising 'waits -> rename_ok' in config.yaml")
+                    return CALCY_SCAN_TOO_SOON, values
+                elif values["cp"] == "-1" or values["level"] == "-1.0":
+                    logger.error("Couldnt detect CP (got %s) or arc-level (got %s)", values["cp"], values["level"])
+                elif red_bar is True:
+                    logger.error("RE_CALCY_IV matched and red_bar is True")
+                    state = CALCY_RED_BAR
+                    return state, values
+                else:
+                    try:
+                        clipboard, clipboard_values = await self.get_data_from_clipboard()
+                    except:
+                        return CALCY_OLD_BASE_STATS, values
+                    values = {**values, **clipboard_values}
+                    values["calcy"] = clipboard
+                    logger.warning(values)
+                    return state, values
+
 
 if __name__ == '__main__':
     if platform == 'win32':
