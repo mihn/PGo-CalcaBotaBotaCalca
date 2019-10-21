@@ -1,4 +1,3 @@
-## **For support, development, shenanigans: check out the [Discord](https://discord.gg/skUAWKg).**
 
 
 # Description
