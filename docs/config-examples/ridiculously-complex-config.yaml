@@ -1,5 +1,8 @@
 ## This shows the complexity level that you can achieve with the renamer.
-## It's actually my true config.yaml
+# [deprecated] It's actually my true config.yaml. [/deprecated]
+# This is nothing now, I went nuts: my actual configuration scheme is modular-config.
+#   Wouldn't advise going there if you wanna retain your sanity.
+
 
 actions:
     # Failed scans get renamed for later verification

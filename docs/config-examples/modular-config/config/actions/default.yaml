@@ -1,0 +1,235 @@
+  ## Search for: '!traded&!shiny&!costume&!eggsonly&!defender&!†&!‡&!↑&!unown,deoxys'
+
+##########
+## FAIL ##
+##########
+- conditions:
+    success: false
+  actions:
+    rename: "!Failed"
+
+
+###############
+## LEGENDARY ##
+###############
+- conditions:
+    name__in: !include ../pokemons/legendaries.yaml
+    appraised: false
+  actions:
+    appraise:
+- conditions:
+    name__in: !include ../pokemons/legendaries.yaml
+    legacy: true
+  actions:
+    rename: "♦ {calcy}"
+    favorite:
+- conditions:
+    name__in: !include ../pokemons/legendaries.yaml
+    iv_min__gt: 95
+  actions:
+    rename: "♦✓{calcystrip}"
+- conditions:
+    name__in: !include ../pokemons/legendaries.yaml
+  actions:
+    rename: "♦{calcy}"
+
+
+##############
+## SPECIFIC ##
+##############
+# Renames Castforms IV100 as special
+#   (I got one of each just because)
+- conditions:
+    name__in:
+      - Castform
+    iv__eq: 100
+  actions:
+    rename: "♣✓{calcy}"
+# Renames Spindas
+#   (I got one of each just because)
+- conditions:
+    name__in:
+      - Spinda
+  actions:
+    rename: "♣ Spinda"
+# Renames Shinx as baby because, for me,
+# they're still babies!!!!111one
+#     (Shinx doesn't match 'eggsonly' filter)
+- conditions:
+    name__in:
+      - Shinx
+  actions:
+    rename: "♥{calcy}"
+# Renames Meltans as not-so-special
+#    (too many, rather keep them low on the
+#     list. overrides next condition below)
+- conditions:
+    name__in:
+      - Meltan
+    iv_min__ge: 90
+  actions:
+    appraise:
+    rename: "♣✓️{calcystrip}"
+- conditions:
+    name__in:
+      - Meltan
+  actions:
+    rename: "♣️{calcy}"
+## Renames random rare & bizarre stuff and
+## those "one-time only" pokémons
+- conditions:
+    name__in: !include ../pokemons/rares.yaml
+    iv_min__gt: 95
+  actions:
+    rename: "♠✓{calcystrip}"
+- conditions:
+    name__in: !include ../pokemons/rares.yaml
+  actions:
+    rename: "♠{calcy}"
+
+
+#####################
+### META RELEVANT ###
+#####################
+# Meta-relevant high IV get appraised
+- conditions:
+    name__in: !include ../pokemons/metarelevant.yaml
+    appraised: false
+  actions:
+    appraise:
+# If legacy and meta, gets renamed like a "sound legacy"
+- conditions:
+    name__in: !include ../pokemons/metarelevant.yaml
+    legacy: true
+  actions:
+    rename: "♪ {calcystrip}"
+    favorite:
+# If meta and lucky, just sings a bit
+- conditions:
+    name__in: !include ../pokemons/metarelevant.yaml
+    lucky: true
+  actions:
+    rename: "♪{calcystrip}"
+
+
+##############
+### HUNDOS ###
+##############
+# Check possible IV100
+- conditions:
+    iv:
+    iv_max__eq: 100
+    appraised: false
+  actions:
+    appraise:
+# If even after appraisal is not clear, rename for manual check:
+- conditions:
+    iv_min__lt: 100
+    iv_max__eq: 100
+    appraised: true
+  actions:
+    rename: "¿✓{calcy}"
+# Hundos and Legacy
+- conditions:
+    iv__eq: 100
+    legacy: true
+  actions:
+    rename: "✓ {calcystrip}"
+# Guaranteed hundos get renamed normally
+- conditions:
+    iv__eq: 100
+  actions:
+    rename: "✓{calcy}"
+
+
+##############
+## LEGACIES ##
+##############
+- conditions:
+    legacy: true
+    appraised: false
+    iv:
+  actions:
+    appraise:
+# If legacy but doesn't falls into another category,
+#   use symbol for rares.
+- conditions:
+    legacy: true
+  actions:
+    favorite:
+    rename: "♠ {calcystrip}"
+
+
+###########
+### PVP ###
+###########
+## This is an experimental
+- conditions:
+#     name__in: !include ../pokemons/pvp.yaml
+    attack_iv__eq: 0
+  actions:
+    appraise:
+    rename: "$PVP{attack_iv}-{defense_iv}-{hp_iv}"
+- conditions:
+#     name__in: !include ../pokemons/pvp.yaml
+    attack_iv__le: 2
+    defense_iv__ge: 10
+    hp_iv__ge: 10
+  actions:
+    appraise:
+    rename: "$PVP{attack_iv}-{defense_iv}-{hp_iv}"
+
+
+##############
+### TRADES ###
+##############
+# Leftovers will probably will traded
+- conditions:
+    name__in: !include ../pokemons/metarelevant.yaml
+  actions:
+    rename: "μ{level} TRADE {iv}"
+# Renames pokemons to trade for candies
+- conditions:
+    name__in: !include ../pokemons/trade_candy.yaml
+  actions:
+    rename: "π{level} TRADE"
+# This one is for trading high lvl low iv pokes
+- conditions:
+    level__ge: 30
+    iv_max__lt: 90
+  actions:
+    rename: "μ{level} TRADE"
+
+
+####################
+### EVOLVE POKES ###
+####################
+# These are pokemons for mass evolving (12 candy per pokémon), which you
+# should rather trade before mass evolving so you get even more candies! :D
+# - conditions:
+#     name__in: !include ../pokemons/evolve.yaml
+#   actions:
+#     rename: "Ω TRADEVO"
+
+
+#######################
+### SKIPS AND TRASH ###
+#######################
+# Any left higher than 95 iv gets checked and if
+# truly iv > 95 gets renamed for manual check
+- conditions:
+    iv_max__ge: 95
+  actions:
+    appraise:
+    rename: "∞{calcy}"
+
+# Any left less than 95 iv gets skipped
+- conditions:
+    iv_max__lt: 95
+
+# This renames anything else that doesn't match any rule above
+# which, in theory, shouldn't happen. So if you see a pokemon with
+# this character you know you have a mistake on this file and most
+# likely missed something.
+- actions:
+    rename: "¿¿{calcy}"

@@ -26,28 +26,12 @@
   actions:
     appraise:
 
-# Good legacy + legendary, prolly going to get used by alt
-- conditions:
-    legacy: true
-    iv_max__ge: 90
-    level__ge: 30
-    name__in: !include ../pokemons/legendaries.yaml
-  actions:
-    favorite:
-    rename: "·{calcy}"
-# Rest of legacy + legendary, prolly going to get traded anytime
-- conditions:
-    legacy: true
-    name__in: !include ../pokemons/legendaries.yaml
-  actions:
-    favorite:
-    rename: "•{calcy}"
-# Rest of legacies non legendary, prolly going to get traded as well
+# Legacies tradeable:
 - conditions:
     legacy: true
   actions:
     favorite:
-    rename: '•{calcy}' # legacies non legandaries
+    rename: 'μ{level} TRADE' # legacies non legandaries
 
 
 ############
@@ -131,32 +115,30 @@
 ## manually checked before trading, or traded exclusively with other μ pokés.
 - conditions:
     level__ge: 33
-    lucky: false
   actions:
-    rename: "π{level} TRADE"
+    rename: "μ{level} TRADE"
 - conditions:
     cp__ge: 2300
-    lucky: false
   actions:
-    rename: "π{level} TRADE"
+    rename: "μ{level} TRADE"
 
 ## Babies go to main, I don't care about babies on alt, waste of space
 - conditions:
     name__in: !include ../pokemons/babies.yaml
   actions:
-    rename: "π TRADE {iv_avg}"
+    rename: "μ TRADE {iv_avg}"
 
 ## Renames the rest of pokémons good for candies
 - conditions:
     name__in: !include ../pokemons/trade_candy.yaml
   actions:
-    rename: "π{level} TRADE"
+    rename: "μ{level} TRADE"
 
 ## Renames the rest of pokémons good for candies
 - conditions:
     name__in: !include ../pokemons/trade_candy_alt.yaml
   actions:
-    rename: "π{level} TRADE"
+    rename: "μ{level} TRADE"
 
 
 

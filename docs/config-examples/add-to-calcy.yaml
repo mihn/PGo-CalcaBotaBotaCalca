@@ -1,0 +1,20 @@
+## This action block does nothing, it just populates your CalcyIV history with
+## all your pokémon. If you want to save them automatically as well, activate the
+## option "Save Appraised Pokémon" and uncomment (remove the #) at lines 19 and 20.
+
+## You could also set Calcy to save any and every scanned pokémon, in advanced settings,
+## though I'd strongly advise you then set --max-retries=1, otherwise the chance of
+## getting false duplicates (or even triplicates) is very high.
+
+actions:
+    # Failed scans get renamed for later verification
+    - conditions:
+        success: false
+      actions:
+        rename: "!ManualCheck"
+
+    # Successful scans are skipped.
+    - conditions:
+        success: true
+#    - actions:
+#        appraise:

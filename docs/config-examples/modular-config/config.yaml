@@ -1,0 +1,48 @@
+#################################
+## Current A-Z Ordering Scheme ##
+#################################
+# In theory my pokémon list should look like this.
+# In practice, renaming 1.5k pokémon while dealing with
+#   so many issues like failed scans, deoxyses, names too
+#   big, and so on, it's kinda of a PITA.
+# This is why I keep this list, so I never forget wtf I had in
+#   mind. For some reason, though, future me always blames me...
+
+## In A-Z, the pokémon list should look like this.
+## The first two characters (# ) don't count, and anything in
+##   parenthesis don't as well. everything else does, so if
+##   there's an space, it'll have an space on PoGo.
+# !ToVerify/Failed/Etc
+# #Defenders
+# ®ShinyBabies
+#
+# †PVP1500
+# ‡PVP2500
+# ☀️Shundos (actually IV >95)
+# ★Shinies
+# ♠Costumes/Rares/Mythical
+# ♣Collections
+# ♦Legendaries
+# ♪Metarelevant
+# ✓Hundos
+
+# ' ' Legacies (it's a space after the preceding character, to push it up the list of the main category)
+
+locations:
+  !include config/locations/redmi.yaml
+
+
+waits:
+  !include config/waits/redmi.yaml
+
+
+blacklist:
+  -
+  #disabled because of https://github.com/Azelphur/PokemonGo-CalcyIV-Renamer/issues/47
+  #!include config/blacklist.yaml
+
+
+## Select below which action file you'd like to use.
+## *Take a look at those yamls yourself, so you understand better how they works.*
+actions:
+  !include config/actions/shiny.yaml

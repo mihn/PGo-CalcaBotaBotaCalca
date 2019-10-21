@@ -1,0 +1,3 @@
+## Replaces all first characters regardless of scan.
+- actions:
+    replace: '☀️'
