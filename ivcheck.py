@@ -265,7 +265,7 @@ class Main:
                 await self.tap("pokemon_menu_button")
                 await self.tap("appraise_button")
                 await self.tap("continue_appraisal")
-                await self.p.send_intent("tesmath.calcy.ACTION_ANALYZE_SCREEN", extra_values=[["silentMode", True], ["--user", self.args.user]])
+                await self.p.send_intent("tesmath.calcy.ACTION_ANALYZE_SCREEN", "tesmath.calcy/.intents.IntentReceiver", extra_values=[["silentMode", True], ["--user", self.args.user]])
                 await asyncio.sleep(0.2)
                 await self.tap("dismiss_calcy")
                 # await self.tap("continue_appraisal") # takes too long, we only need to wait a lot before the stats
@@ -479,7 +479,7 @@ class Main:
         return {}
 
     async def check_pokemon(self):
-        await self.p.send_intent("tesmath.calcy.ACTION_ANALYZE_SCREEN", extra_values=[["silentMode", True], ["--user", self.args.user]])
+        await self.p.send_intent("tesmath.calcy.ACTION_ANALYZE_SCREEN", "tesmath.calcy/.intents.IntentReceiver", extra_values=[["silentMode", True], ["--user", self.args.user]])
         red_bar = False
         values = {}
         while True:
