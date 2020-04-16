@@ -292,7 +292,7 @@ class Main:
                 if values["success"] is False:
                     await self.p.key('SHIFT TAB')
                     await self.p.key('ENTER')
-                    await asyncio.sleep(0.5)
+                    await asyncio.sleep(0.8)
 
                 new_chr = actions["replace"]
 
@@ -307,21 +307,18 @@ class Main:
                 await self.p.send_intent("clipper.set", extra_values=[["text", final_name]])
 
                 if args.touch_paste:
-                    await self.tap_and_hold('edit_box', 600)
-                    await self.tap('paste')
+                    await self.tap_and_hold('edit_box', 1000)
+                    await self.p.key('PASTE')
+                    await self.tap('done')
+                    await self.tap('rename_ok')
                 else:
                     await self.p.key('PASTE')  # Paste into rename
-
-                await self.p.key('TAB')
-                await self.p.key('ENTER')
-
-                await self.tap('rename_ok')
 
             if "rename" in actions:
                 if values["success"] is False:
                     await self.p.key('SHIFT TAB')
                     await self.p.key('ENTER')
-                    await asyncio.sleep(0.5)
+                    await asyncio.sleep(0.8)
                 await self.tap('rename')
                 if not (actions.get("rename", "{calcy}") == "{calcy}" or ('calcy' in actions["rename"] and len(actions["rename"]) == 1)): # Don't bother setting clipboard if we don't need to change it
                                                                                                                                           # also now allows users to forget to enclose {calcy} in quotes.
@@ -336,14 +333,13 @@ class Main:
                     await self.p.send_intent("clipper.set", extra_values=[["text", final_name]])
 
                 if args.touch_paste:
-                    await self.tap_and_hold('edit_box', 600)
-                    await self.tap('paste')
+                    await self.tap_and_hold('edit_box', 1000)
+                    await self.p.key('PASTE')
+                    await self.tap('done')
+                    await self.tap('rename_ok')
                 else:
                     await self.p.key('PASTE')  # Paste into rename
 
-                await self.p.key('TAB')
-                await self.p.key('ENTER')
-                await self.tap('rename_ok')
 
             if "favorite" in actions:
                 if not await self.check_favorite():
