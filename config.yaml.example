@@ -7,6 +7,7 @@ locations:
     rename_ok: [540, 1050]
     close_calcy_dialog: [966, 1092]
     edit_box: [90, 1090]    # only used with --touch-paste
+    done: [90, 1190]    # only used with --touch-paste
     paste: [483, 1092]      # only used with --touch-paste
     favorite_button: [980, 156]
     favorite_button_box: [960, 142, 1001, 180]
