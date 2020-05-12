@@ -104,7 +104,11 @@ class PokemonGo(object):
         return line
 
     async def get_clipboard(self):
+        return_code, stdout, stderr = await self.run(["adb", "-s", await self.get_device(), "shell", "am start -n ca.zgrs.clipper/.Main"])
+        await asyncio.sleep(0.3)
         await self.send_intent("clipper.get")
+        return_code, stdout, stderr = await self.run(["adb", "-s", await self.get_device(), "shell", "am start -n com.nianticlabs.pokemongo/com.nianticproject.holoholo.libholoholo.unity.UnityMainActivity"])
+        await asyncio.sleep(0.3)
         while True:
             line = await self.read_logcat()
             match = RE_CLIPBOARD_TEXT.match(line)
