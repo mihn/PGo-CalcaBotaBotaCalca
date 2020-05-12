@@ -310,12 +310,13 @@ class Main:
                     await self.tap_and_hold('edit_box', 600)
                     await self.tap('paste')
                 else:
+                    await asyncio.sleep(0.2)      #Some phones need a little time to get the keyboard up
+                    await self.tap_and_hold('edit_box', 1200)
                     await self.p.key('PASTE')  # Paste into rename
-
-                await self.p.key('TAB')
-                await self.p.key('ENTER')
-
-                await self.tap('rename_ok')
+                    await self.p.key('TAB')
+                    await self.p.key('ENTER')
+                    await self.tap('rename_ok')
+                    await self.p.key('PASTE')  # Paste into rename
 
             if "rename" in actions:
                 if values["success"] is False:
@@ -339,11 +340,12 @@ class Main:
                     await self.tap_and_hold('edit_box', 600)
                     await self.tap('paste')
                 else:
+                    await asyncio.sleep(0.2)      #Some phones need a little time to get the keyboard up
+                    await self.tap_and_hold('edit_box', 1200)
                     await self.p.key('PASTE')  # Paste into rename
-
-                await self.p.key('TAB')
-                await self.p.key('ENTER')
-                await self.tap('rename_ok')
+                    await self.p.key('TAB')
+                    await self.p.key('ENTER')
+                    await self.tap('rename_ok')
 
             if "favorite" in actions:
                 if not await self.check_favorite():
