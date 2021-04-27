@@ -31,15 +31,14 @@ ops = {
 }
 
 logger = logging.getLogger('ivcheck')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
+ch.setLevel(logging.INFO)
 formatter = ColoredFormatter('%(log_color)s[%(asctime)s] %(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s', datefmt='%I:%M:%S %p')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-#JGF07feb2020 - old:  RE_CALCY_IV = re.compile(r"^.\/i       (\(\s*\d+\)){0,1}: Received values: Id: -{0,1}\d+ {0,1}\({0,1}(?P<name>[^\(\)]+){0,1}\){0,1}, Nr: (?P<id>-{0,1}\d+), CP: (?P<cp>-{0,1}\d+), Max HP: (?P<max_hp>-{0,1}\d+), Dust cost: (?P<dust_cost>-{0,1}\d+), Level: (?P<level>\-{0,1}[\d\.]+), FastMove (?P<fast_move>.+), SpecialMove (?P<special_move>.+), SpecialMove2 (?P<special_move2>.+), Gender (?P<gender>.+), CatchYear (?P<catch_year>.+), Favorite: (?P<favorite>(false|true)), Level-up (true|false):$")
-RE_CALCY_IV = re.compile(r"^.\/k\s*\(\s*\d+\): Received values: Id\(s\): (?P<name>\w+[-. \W+\w+]*) \((?P<id>\d+[,\d+]*)\), CP: (?P<cp>-{0,1}\d+), HP: (?P<max_hp>-{0,1}\d+), Level\(s\): (?P<level>\-{0,1}[\d\.]+), Dust: (?P<dust_cost>-{0,1}\d+), FastMove: (?P<fast_move>\w+[- \w+]*), SpecialMove: (?P<special_move>\w+[- \w+]*), SpecialMove2: (?P<special_move2>\w+[- \w+]*), Gender: (?P<gender>\w+), Lucky: (?:YES|NO), CatchYear: (?P<catch_year>\w+|-1), Favorite: (?P<favorite>(?:false|true)), Height: (?P<height>-{0,1}\d+) \w+, TLevel-up: (?:true|false)$")
+RE_CALCY_IV = re.compile(r"^.\/d\s*\(\s*\d+\): Received values: (?P<name>\w+[\W]{0,2}[\w]*[\W]{0,2}[\w]*) \((?P<id>\d+)\), CP: (?P<cp>-{0,1}\d+), HP: (?P<max_hp>-{0,1}\d+), Level\(s\): (?P<level>\-{0,1}[\d\.]+), Dust: (?P<dust_cost>-{0,1}\d+), FastMove: (?P<fast_move>\w+[- \w+]*), SpecialMove: (?P<special_move>\w+[- \w+]*), SpecialMove2: (?P<special_move2>\w+[- \w+]*), Gender: (?P<gender>\w+), Lucky: (?P<lucky>(?:YES|NO)), CatchYear: (?P<catch_year>\w+|-1), Favorite: (?P<favorite>(?:false|true)), Height: (?P<height>-{0,1}\d+) \w+ TLevel-up: (?P<tlevelup>(?:null|true|false))$")
 RE_RED_BAR = re.compile(r"^.+\(\s*\d+\): Screenshot #\d has red error box at the top of the screen$")
 RE_SUCCESS = re.compile(r"^.+\(\s*\d+\): calculateScanOutputData finished after \d+ms$")
 RE_SCAN_INVALID = re.compile(r"^.+\(\s*\d+\): Scan invalid .+$")
