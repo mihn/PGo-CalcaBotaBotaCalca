@@ -208,3 +208,5 @@ _Conditions also support the following operators:_
 5. I don't quite get the `--copy-calcy` _thingamabove_...
 
     ![](docs/tutorial_spaces.gif?raw=true)
+
+6. If you get an error `java.lang.SecurityException: Injecting to another application requires INJECT_EVENTS permission` you have to enable `USB ebugging (Security settings)` in your phone **Settings > Developer options**
